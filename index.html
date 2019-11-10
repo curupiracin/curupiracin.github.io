@@ -8,8 +8,8 @@
   <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
     type="text/javascript" charset="utf-8"></script>
   <meta charset="utf-8" />
-  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/fire.png">
-  <link rel="icon" type="image/png" href="/assets/img/fire.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="assets/img/fire.png">
+  <link rel="icon" type="image/png" href="assets/img/fire.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
     Curupira
@@ -19,10 +19,10 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
   <!-- CSS Files -->
-  <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="/assets/css/paper-dashboard.css?v=2.0.0" rel="stylesheet" />
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/css/paper-dashboard.css?v=2.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="/assets/demo/demo.css" rel="stylesheet" />
+  <link href="assets/demo/demo.css" rel="stylesheet" />
 </head>
 
 <body class="">
@@ -122,106 +122,53 @@
                     // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
                     var markers = [];
                     var map;
-                    var lastData = 0;
-                    var node_selected;
-                    function initMap() { // Google Map Initialization... 
-                                       
+                    var last_ref;
+                    function initMap() { // Google Map Initialization...                                        
                       map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 16,
                         gestureHandling: 'greedy',
                         streetViewControl: false,
-                        styles : [
-                        {
+                        styles : [{
                           featureType: "poi",
-                          stylers: [
-                            { visibility: "off" }
-                          ]   
-                          }
-                        ],
-                        center: new google.maps.LatLng(-8.050883, -34.952886),
+                          stylers: [{
+                             visibility: "off" 
+                          }]}],
+                        center: new google.maps.LatLng(-8.039658, -34.949281),
                         mapTypeId: 'roadmap'
                       });
                     }
         
-                    // This Function will create a car icon with angle and add/display that marker on the map
-                    function AddMarker(data, tipo) {
-                      console.log("Call Addmarker...");
-                      var icon_node = {
-                        url: '/assets/img/sensor-marker.svg', // url
-                        scaledSize: new google.maps.Size(75, 75), // scaled size
-                        origin: new google.maps.Point(0,0), // origin
-                        anchor: new google.maps.Point(75, 75) // anchor
-                      };                    
-                      var icon_central = {
-                        url: '/assets/img/central-marker.svg', // url
-                        scaledSize: new google.maps.Size(75, 75), // scaled size
-                        origin: new google.maps.Point(0,0), // origin
-                        anchor: new google.maps.Point(75, 75) // anchor
-                      };
-                      var selectedIconCentral = {
-                        url: '/assets/img/central-marker-selected.svg', // url
-                        scaledSize: new google.maps.Size(75, 75), // scaled size
-                        origin: new google.maps.Point(0,0), // origin
-                        anchor: new google.maps.Point(75, 75) // anchor
-                      };
-                      var selectedIconNode = {
-                        url: '/assets/img/sensor-marker-selected.svg', // url
-                        scaledSize: new google.maps.Size(75, 75), // scaled size
-                        origin: new google.maps.Point(0,0), // origin
-                        anchor: new google.maps.Point(75, 75) // anchor
-                      };
+                   
+                    function AddMarker(data) {
+                      console.log("Call Addmarker...");  
+
+                      var position = { lat: data.val().latitude, lng: data.val().longitude};
                       
-                      var icon;
-                      if(tipo == 1) {
-                        if (node_selected ==  data.val().id) {
-                          icon = selectedIconNode;
-                        }
-                        else {
-                          icon = icon_node;
-                        }
-                        
-                      }
-                      else {
-                        if (node_selected ==  data.val().id) {
-                          icon = selectedIconCentral;
-                        }
-                        else {
-                          icon = icon_central;
-                        }
-                      }
-                      var position = { lat: data.val().latitude, lng: data.val().longitude };
-      
                       var marker = new google.maps.Marker({                             
-                          position: position,
-                          icon: icon,
+                          position: position,                          
                           map: map
                       });
                     
                       markers[data.key] = marker; // add marker in the markers array... 
                       marker.addListener('click', function() {
-                        console.log("Click update");
-                        node_selected =  data.val().id;
-
-                        if (lastData != 0) { // remover a seleção anterior
-                          markers[lastData.key].setMap(null);
-                          AddMarker(lastData, lastData.val().tipo);
+                        if(last_ref){
+                          console.log("retirando evento anterior");
+                          last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
+                        } 
+                        var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+                        var func_att_data = function (sensores) {//Sensoreamento 
+                          sensores.forEach(function(dado) {                            
+                            document.getElementById("Temperatura").innerHTML = dado.val().temperatura.toString().substr(0, 5) + "°C";
+                            document.getElementById("Umidade").innerHTML = dado.val().umidade.toString().substr(0, 5) + "%";
+                            document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
+                            document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
+                            document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
+                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";                                
+                          });                          
                         }
-                        
-                        markers[data.key].setMap(null);
-                        AddMarker(data, data.val().tipo);
-                        //updateMarker(data);
-                        lastData = data;
-
-                        var today = new Date();
-                        var date = today.getFullYear()+'/'+(today.getMonth()+1)+'/'+today.getDate();           
-                        document.getElementById("Temperatura").innerHTML = data.val().temperatura.toString().substr(0, 5) + "°C";
-                        document.getElementById("att_temperatura").innerHTML = date;
-                        document.getElementById("Umidade").innerHTML = data.val().umidade.toString().substr(0, 5) + "%";
-                        document.getElementById("velocidadeVento").innerHTML = data.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
-                        document.getElementById("risco").innerHTML = data.val().fwi.toString().substr(0, 5);        
-                        document.getElementById("pluviosidade").innerHTML = data.val().pluviosidade.toString().substr(0, 5) + "mm";
-                        document.getElementById("fumaca").innerHTML = data.val() == 1 ? "Com Fumaça":"Sem Fumaça";
-                      });
+                        last_ref = ref_node_sensor;
+                        ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
+                      });                       
                     }
         
                     // get firebase database reference...
@@ -231,21 +178,10 @@
                       var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
                       ref_node_info.orderByKey().on('value', function (keys) {//Informações de um nó      
                         
-                        if(keys.val().latitude && keys.val().longitude){
+                        if(keys.val().latitude && keys.val().longitude){//Adicionando marcador ao mapa
                           console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
-                        }
-                        
-          //To do
-          //Validar latitude e longitude aqui, 
-          //se for válido, então adiciona o marcador.
-                        var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + nodes.key + '/sensoriamento');
-                        ref_node_sensor.orderByKey().limitToLast(1).on('value', function (sensores) {//Sensoreamento 
-                          sensores.forEach(function(dado) {
-                            console.log("    Temperatura: " + dado.val().temperatura);
-          //To do
-          //Inicializar o historico??
-                          });                          
-                        });
+                          AddMarker(keys);                                   
+                        }    
                       });                      
                     });
 
@@ -268,7 +204,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/fire.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/fire.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -294,7 +230,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/temperature.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/temperature.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -319,7 +255,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/humidity.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/humidity.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -344,7 +280,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/windy.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/windy.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -369,7 +305,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/rain.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/rain.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -394,7 +330,7 @@
                   <div class="row">
                     <div class="col-5 col-md-4">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/forest-fire.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/forest-fire.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -420,7 +356,7 @@
                   <div class="row">
                     <div class="col-5 col-md-3">
                       <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="/assets/img/clock.png"/></i>
+                        <i><img width="42px" height="42px" src="assets/img/clock.png"/></i>
                       </div>
                     </div>
                     <div class="col-7 col-md-8">
@@ -428,11 +364,9 @@
                         <p class="card-category">Intervalo de Sensoreamento</p>  
                       </div>
 
-                      <div class="btn-group" style="width:100%" >
-
-
+                      <div class="btn-group col-12" style="width:100%" >
                         <input type="text" id = "intervalo" class = "form-control" placeholder="Digite um intervalo de medida" />
-                        <button type = "submit" class = "btn btn-primary"  onclick = "envia_firebase()" style="margin: 0px 10px" > Atualizar</button>
+                        <button type = "submit" class = "btn btn-primary"  onclick = "envia_firebase()" style="margin: 0px 10px" >Atualizar</button>
                       </div>
                   </div>
                 </div>
@@ -537,18 +471,18 @@
   </div>
 
   <!--   Core JS Files   -->
-  <script src="/assets/js/core/jquery.min.js"></script>
-  <script src="/assets/js/core/popper.min.js"></script>
-  <script src="/assets/js/core/bootstrap.min.js"></script>
-  <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="assets/js/core/jquery.min.js"></script>
+  <script src="assets/js/core/popper.min.js"></script>
+  <script src="assets/js/core/bootstrap.min.js"></script>
+  <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
   <!-- Chart JS -->
-  <script src="/assets/js/plugins/chartjs.min.js"></script>
+  <script src="assets/js/plugins/chartjs.min.js"></script>
   <!--  Notifications Plugin    -->
-  <script src="/assets/js/plugins/bootstrap-notify.js"></script>
+  <script src="assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="/assets/js/paper-dashboard.min.js?v=2.0.0" type="text/javascript"></script>
+  <script src="assets/js/paper-dashboard.min.js?v=2.0.0" type="text/javascript"></script>
   <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
-  <script src="/assets/demo/demo.js"></script>
+  <script src="assets/demo/demo.js"></script>
   <script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
