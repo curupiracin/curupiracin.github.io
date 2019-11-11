@@ -163,13 +163,38 @@
                             document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
                             document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
                             document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
-                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";                                
-                          });                          
+                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça"; 
+
+                            var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
+                            alteraDiv(valorRisco);
+
+                          });
+                          function alteraDiv (valorRisco) {
+                            if (valorRisco < 8) {
+                              document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
+                            }
+                            else if (valorRisco < 16) {
+                              document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
+                            }
+                            else if (valorRisco < 24) {
+                              document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
+                            }
+                            else if (valorRisco < 33) {
+                              document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
+                            }
+                            else if (valorRisco < 41) {
+                              document.getElementById('testeBack').style.backgroundColor = '#D10111';
+                            }
+                            else {
+                              document.getElementById('testeBack').style.backgroundColor = '#AE000A';
+                            }
+                          }                         
                         }
                         last_ref = ref_node_sensor;
                         ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
                       });                       
                     }
+
         
                     // get firebase database reference...
                     var ref_node = firebase.database().ref('Curupira/Nodes');                    
@@ -199,7 +224,7 @@
           <!-- Basic Info Node -->
           <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
+              <div class="card card-stats" id="testeBack">
                 <div class="card-body ">
                   <div class="row">
                     <div class="col-5 col-md-4">
@@ -210,8 +235,11 @@
                     <div class="col-7 col-md-8">
                       <div class="numbers">
                         <p class="card-category">Risco de Incêndio</p>
-                        <p class="card-title"><p id="risco">NULL</p>
+                        <p class="card-title"><p id="risco">NULL
+                          <script>
+                          </script>
                         </p>
+                      </p>
                       </div>
                     </div>
                   </div>
