@@ -50,7 +50,8 @@
       var timeInterval1 = firebase.database().ref("Curupira");
       var valInterval1 = {timeInterval : novo_periodo}
       timeInterval1.update(valInterval1);
-      console.log(novo_periodo);      
+      console.log(novo_periodo);
+      document.getElementById("intervalo").value = "";    
     }
 
     function newNode () {
@@ -64,7 +65,10 @@
         longitude : newLongitude
       }
       newPath.update(valPath);
-      console.log("New Node [" + toString(newId) + "] in: " + toString(latitude) + " , " + longitude);
+      console.log("New Node [" + parseInt(newId, 10) + "] in: " + parseFloat(newLatitude, 10) + " , " + parseFloat(newLongitude, 10));
+      document.getElementById("NewNodeId").value = "";
+      document.getElementById("latitude").value = "";
+      document.getElementById("longitude").value = "";
     }
   </script>
 
