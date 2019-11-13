@@ -52,6 +52,20 @@
       timeInterval1.update(valInterval1);
       console.log(novo_periodo);      
     }
+
+    function newNode () {
+      var newId = parseInt(document.getElementById("NewNodeId").value.toString(), 10);
+      var newLatitude = parseFloat(document.getElementById("latitude").value.toString(), 10);
+      var newLongitude = parseFloat(document.getElementById("longitude").value.toString(), 10);
+      var newPath = firebase.database().ref("Curupira/Nodes/node-" + newId);
+      var valPath = {
+        id : newId,
+        latitude : newLatitude,
+        longitude : newLongitude
+      }
+      newPath.update(valPath);
+      console.log("New Node [" + toString(newId) + "] in: " + toString(latitude) + " , " + longitude);
+    }
   </script>
 
 <div class="main-panel">
@@ -165,6 +179,15 @@
                             document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
                             document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça"; 
 
+                            document.getElementById("noSelec").innerHTML = dado.val().id.toString();
+                            document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
+                            if (dado.val().alive == 1) {
+                              document.getElementById("statusNode").style.color = 'green';
+                            }
+                            else {
+                              document.getElementById("statusNode").style.color = 'red';
+                            }
+                            document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
                             var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
                             alteraDiv(valorRisco);
 
@@ -223,6 +246,95 @@
 
           <!-- Basic Info Node -->
           <div class="row">
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/id-card.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-category">Nó selecionado</p>
+                        <p class="card-title"><p id="noSelec">NULL
+                          <script>
+                          </script>
+                        </p>
+                      </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i class="fa fa-refresh"></i> 
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/list.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-category">Status do Nó</p>
+                        <p class="card-title"><p id="statusNode">NULL
+                          <script>
+                          </script>
+                        </p>
+                      </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/empty.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-category">Nivel de Bateria</p>
+                        <p class="card-title"><p id="nivelBateria">NULL
+                          <script>
+                          </script>
+                        </p>
+                      </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="col-lg-3 col-md-6 col-sm-6">
               <div class="card card-stats" id="testeBack">
                 <div class="card-body ">
@@ -236,8 +348,6 @@
                       <div class="numbers">
                         <p class="card-category">Risco de Incêndio</p>
                         <p class="card-title"><p id="risco">NULL
-                          <script>
-                          </script>
                         </p>
                       </p>
                       </div>
@@ -378,16 +488,16 @@
               </div>
             </div>
 
-            <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
               <div class="card card-stats">
                 <div class="card-body ">
                   <div class="row">
-                    <div class="col-5 col-md-3">
+                    <div class="col-5 col-md-2">
                       <div class="icon-big text-center icon-warning">
                         <i><img width="42px" height="42px" src="assets/img/clock.png"/></i>
                       </div>
                     </div>
-                    <div class="col-7 col-md-8">
+                    <div class="col-7 col-md-10">
                       <div class="numbers">
                         <p class="card-category">Intervalo de Sensoreamento</p>  
                       </div>
@@ -408,6 +518,41 @@
             </div>
 
           </div>
+
+          <div class="col-lg-5 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-2">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/marker.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-10">
+                      <div class="numbers">
+                        <p class="card-category">Adicionar Novo Nó</p>  
+                      </div>
+
+                      <div class="btn-group col-md-12" style="width:100%" >
+                        <input type="text" id = "NewNodeId" class = "form-control" placeholder="ID" />
+                        <input type="text" id = "latitude" class = "form-control" placeholder="Latitude">
+                        <input type="text" id = "longitude" class = "form-control" placeholder="Longitude">
+                        <button type = "submit" class = "btn btn-primary"  onclick = "newNode()" style="margin: 0px 10px" >Enviar</button>
+                      </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i class="fa fa-refresh"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
           <!-- EndBasic Info Node -->
 
           <!--
