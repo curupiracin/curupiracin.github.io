@@ -185,6 +185,8 @@
 
                             document.getElementById("noSelec").innerHTML = dado.val().id.toString();
                             document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
+                            var valorFuma = parseInt(dado.val().fumaca, 10);
+                            alteraFuma(valorFuma);
                             if (dado.val().alive == 1) {
                               document.getElementById("statusNode").style.color = 'green';
                             }
@@ -196,6 +198,17 @@
                             alteraDiv(valorRisco);
 
                           });
+
+                          function alteraFuma (valorFuma) {
+                            console.log("Entrou");
+                            if (valorFuma == 1) {
+                                document.getElementById('fumaBack').style.backgroundColor = 'red';
+                            }
+                            else {
+                                document.getElementById('fumaBack').style.backgroundColor = '#E6E6E6';
+                            }
+                          }
+
                           function alteraDiv (valorRisco) {
                             if (valorRisco < 8) {
                               document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
@@ -467,7 +480,7 @@
               </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
+              <div class="card card-stats" id="fumaBack">
                 <div class="card-body ">
                   <div class="row">
                     <div class="col-5 col-md-4">
