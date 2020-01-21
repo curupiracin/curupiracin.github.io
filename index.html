@@ -141,6 +141,21 @@
                     var markers = [];
                     var map;
                     var last_ref;
+                    
+                    var ref_node = firebase.database().ref('Curupira/Nodes');                    
+                    ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
+                      console.log("Chave: " + nodes.key);
+                      var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
+                      ref_node_info.orderByKey().on('value', function (keys) { // Informações de um nó      
+                        
+                        if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
+                          console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
+                          AddMarker(keys);
+                          printInfo(keys);                               
+                        }    
+                      });                      
+                    });
+
                     function initMap() { // Google Map Initialization...                                        
                       map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 20,
@@ -156,8 +171,7 @@
                       });
                     }
         
-                   
-                    function AddMarker(data) {
+                    function AddMarker (data) {
                       console.log("Call Addmarker...");  
 
                       var position = { lat: data.val().latitude, lng: data.val().longitude};
@@ -168,20 +182,28 @@
                       });
                     
                       markers[data.key] = marker; // add marker in the markers array... 
-                      marker.addListener('click', function() {
+                      marker.addListener('click', function () {
+                        printInfo(data);
+                      });                      
+                    }
+
+                    function printInfo (data) {
                         if(last_ref){
                           console.log("retirando evento anterior");
                           last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
                         } 
                         var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                        var func_att_data = function (sensores) {//Sensoreamento 
-                          sensores.forEach(function(dado) {                            
+                        var func_att_data = function (sensores) {  //Sensoriamento 
+                          sensores.forEach(function(dado) {                      
                             document.getElementById("Temperatura").innerHTML = dado.val().temperatura.toString().substr(0, 5) + "°C";
                             document.getElementById("Umidade").innerHTML = dado.val().umidade.toString().substr(0, 5) + "%";
                             document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
                             document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
                             document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
-                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça"; 
+                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";
+
+                            document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
+                            document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
 
                             document.getElementById("noSelec").innerHTML = dado.val().id.toString();
                             document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
@@ -200,7 +222,6 @@
                           });
 
                           function alteraFuma (valorFuma) {
-                            console.log("Entrou");
                             if (valorFuma == 1) {
                                 document.getElementById('fumaBack').style.backgroundColor = 'red';
                             }
@@ -212,46 +233,40 @@
                           function alteraDiv (valorRisco) {
                             if (valorRisco < 8) {
                               document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Baixo";
+                              document.getElementById("fraseRisco").style.color = 'black';
                             }
                             else if (valorRisco < 16) {
                               document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Moderado";
+                              document.getElementById("fraseRisco").style.color = 'black';
                             }
                             else if (valorRisco < 24) {
                               document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!";
+                              document.getElementById("fraseRisco").style.color = 'black';
                             }
                             else if (valorRisco < 33) {
                               document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!!!";
+                              document.getElementById("fraseRisco").style.color = 'white';
                             }
                             else if (valorRisco < 41) {
                               document.getElementById('testeBack').style.backgroundColor = '#D10111';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                              document.getElementById("fraseRisco").style.color = 'white';
                             }
                             else {
                               document.getElementById('testeBack').style.backgroundColor = '#AE000A';
+                              document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                              document.getElementById("fraseRisco").style.color = 'white';
                             }
                           }                         
                         }
                         last_ref = ref_node_sensor;
                         ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
-                      });                       
                     }
 
-        
-                    // get firebase database reference...
-                    var ref_node = firebase.database().ref('Curupira/Nodes');                    
-                    ref_node.orderByKey().on('child_added', function (nodes) {//Lista de nós                                        
-                      console.log(nodes.key);
-                      var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
-                      ref_node_info.orderByKey().on('value', function (keys) {//Informações de um nó      
-                        
-                        if(keys.val().latitude && keys.val().longitude){//Adicionando marcador ao mapa
-                          console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
-                          AddMarker(keys);                                   
-                        }    
-                      });                      
-                    });
-
-                    
-                
                   </script>
                   <!--  Google Maps Plugin    -->
                   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBftlLZg9rAwLppSdyGTcHAikIaNb9YUJw&callback=initMap"></script>
@@ -263,6 +278,60 @@
 
           <!-- Basic Info Node -->
           <div class="row">
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats" id="testeBack">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/fire.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-category">Risco de Incêndio</p>
+                        <p class="card-title"><p id="risco">NULL
+                        </p>
+                      </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i class="fa fa-refresh"></i> <span id = "fraseRisco"> NULL </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats" id="fumaBack">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-4">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/forest-fire.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                      <div class="numbers">
+                        <p class="card-category">Fumaça</p>
+                        <p class="card-title" id = 'fumaca'> NULL <p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i></i>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div class="col-lg-3 col-md-6 col-sm-6">
               <div class="card card-stats">
@@ -288,7 +357,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> 
+                    <i class="fa fa-refresh"></i> Ultima atualização em <span id="ultima_att_data"> __/__ </span> às <span id="ultima_att_hora"> -- : -- </span>
                   </div>
                 </div>
               </div>
@@ -317,7 +386,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -346,39 +415,12 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                    <i></i>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats" id="testeBack">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/fire.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Risco de Incêndio</p>
-                        <p class="card-title"><p id="risco">NULL
-                        </p>
-                      </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
               <div class="card card-stats">
                 <div class="card-body ">
@@ -399,7 +441,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-calendar-o"></i>Atualizado em <span id='att_temperatura'></span>
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -424,7 +466,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-calendar-o"></i> Atualizado em <span id='att_temperatura'></span>
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -449,7 +491,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -474,32 +516,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats" id="fumaBack">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/forest-fire.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Fumaça</p>
-                        <p class="card-title" id = 'fumaca'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -528,7 +545,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i> Atualizado recentemente
+                    <i></i>
                   </div>
                 </div>
               </div>
@@ -561,7 +578,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i class="fa fa-refresh"></i>
+                    <i></i>
                   </div>
                 </div>
               </div>
