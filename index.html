@@ -172,15 +172,36 @@
                     }
         
                     function AddMarker (data) {
-                      console.log("Call Addmarker...");  
+                      console.log("Call Addmarker...");                
 
                       var position = { lat: data.val().latitude, lng: data.val().longitude};
                       
                       var marker = new google.maps.Marker({                             
-                          position: position,                          
+                          position: position,
+                          title:data.key.toString(),                     
                           map: map
                       });
-                    
+
+                      // var ref_test = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+                      // ref_test.orderByKey().limitToLast(1).on('value', function (data_test) {
+                      //   data_test.forEach(function (data_test_1) {
+                      //     console.log("Agr vai " + data_test_1.key);
+
+                      //     if (data_test_1.val().fumaca == 1) {
+                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/firedept.png';
+                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/firedept.png');
+                      //     }
+                      //     else if (data_test_1.val().alive == 0) {
+                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
+                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/caution.png');
+                      //     }
+                      //     else {
+                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
+                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
+                      //     }
+                      //   });
+                      // });
+
                       markers[data.key] = marker; // add marker in the markers array... 
                       marker.addListener('click', function () {
                         printInfo(data);
@@ -216,6 +237,7 @@
                               document.getElementById("statusNode").style.color = 'red';
                             }
                             document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
+                            document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Carga da bateria normal" : "Carga da bateria baixa";
                             var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
                             alteraDiv(valorRisco);
 
@@ -415,7 +437,7 @@
                 <div class="card-footer ">
                   <hr>
                   <div class="stats">
-                    <i></i>
+                    <i></i> <span id="msgBateria"> </span>
                   </div>
                 </div>
               </div>
