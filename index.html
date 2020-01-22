@@ -169,7 +169,16 @@
                         center: new google.maps.LatLng(-5.832281, -35.205511),
                         mapTypeId: 'roadmap'
                       });
+
+                      map.addListener('click', function (local) {
+                      console.log("Cilque no mapa: [" + local.latLng.lat() + "] [ " + local.latLng.lng());
+                      document.getElementById("latitude").value = local.latLng.lat();
+                      document.getElementById("longitude").value = local.latLng.lng();
+
+                    });
                     }
+
+
         
                     function AddMarker (data) {
                       console.log("Call Addmarker...");                
