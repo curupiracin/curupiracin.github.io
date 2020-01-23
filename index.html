@@ -138,6 +138,7 @@
                   </col> 
                   <script> 
                     // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
+                    var arrTest = [];
                     var markers = [];
                     var map;
                     var last_ref;
@@ -151,7 +152,8 @@
                         if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
                           console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
                           AddMarker(keys);
-                          printInfo(keys);                               
+                          printInfo(keys);
+                          chartUpdate(keys);                          
                         }    
                       });                      
                     });
@@ -214,7 +216,40 @@
                       markers[data.key] = marker; // add marker in the markers array... 
                       marker.addListener('click', function () {
                         printInfo(data);
+                        chartUpdate(data);
                       });                      
+                    }
+
+
+
+                    function chartUpdate (data) {
+                      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+                      ref_graph.orderByKey().limitToLast(50).on('value', function (graph_data) {
+                        myChart.data.labels = [];
+                        myChart.data.datasets[0].data = [];
+                        myChart.data.datasets[1].data = [];
+                        myChart.data.datasets[2].data = [];
+                        myChart.data.datasets[3].data = [];
+                        myChart.data.datasets[4].data = [];
+                        myChart.data.datasets[5].data = [];
+                        graph_data.forEach(function (dado) {
+                          myChart.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+                          myChart.data.datasets[0].data.push(dado.val().fwi);
+                          myChart.data.datasets[1].data.push(dado.val().temperatura);
+                          myChart.data.datasets[2].data.push(dado.val().umidade);
+                          myChart.data.datasets[3].data.push(dado.val().vel_do_vento);
+                          myChart.data.datasets[4].data.push(dado.val().pluviosidade);
+                          myChart.data.datasets[5].data.push(dado.val().bateria);
+                        });
+                        myChart.data.labels.reverse();
+                        myChart.data.datasets[0].data.reverse();
+                        myChart.data.datasets[1].data.reverse();
+                        myChart.data.datasets[2].data.reverse();
+                        myChart.data.datasets[3].data.reverse();
+                        myChart.data.datasets[4].data.reverse();
+                        myChart.data.datasets[5].data.reverse();
+                      });
+                      myChart.update();
                     }
 
                     function printInfo (data) {
@@ -614,9 +649,78 @@
                 </div>
               </div>
             </div>
-
           </div>
 
+
+          <div class="col-md-12">
+              <div class="card ">
+                <div class="card-body ">
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+                  <canvas id="myChart" width="400" height="200"></canvas>
+                  <script>
+                      var ctx = document.getElementById('myChart').getContext('2d');
+                      var myChart = new Chart(ctx, {
+                          type: 'line',
+                          data: {
+                              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                              datasets: [
+                              {
+                                  label: 'Risco',
+                                  data: [1,1,1,1,1,1],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'red',
+                                  borderWidth: 4,
+                              },
+                              {
+                                  label: 'Temperatura',
+                                  data: [2,2,2,2,2,2],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'blue',
+                                  borderWidth: 4,
+                              },
+                              {
+                                  label: 'Umidade',
+                                  data: [3,3,3,3,3,3],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'green',
+                                  borderWidth: 4,
+                              },
+                              {
+                                  label: 'Vento',
+                                  data: [4,4,4,4,4,4],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'white',
+                                  borderWidth: 4,
+                              },
+                              {
+                                  label: 'Pluviosidade',
+                                  data: [5,5,5,5,5,5],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'yellow',
+                                  borderWidth: 4,
+                              },
+                              {
+                                  label: 'Bateria',
+                                  data: [6,6,6,6,6,6],
+                                  backgroundColor: 'transparent',
+                                  borderColor: 'brown',
+                                  borderWidth: 4,
+                              },
+                              ]
+                          },
+                          options: {
+                              scales: {
+                                  yAxes: [{
+                                      ticks: {
+                                          beginAtZero: true
+                                      }
+                                  }]
+                              }
+                          }
+                      });
+                  </script>
+                </div>                  
+              </div>
 
           <!-- EndBasic Info Node -->
 
