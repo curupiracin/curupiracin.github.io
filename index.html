@@ -224,7 +224,7 @@
 
                     function chartUpdate (data) {
                       ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                      ref_graph.orderByKey().limitToLast(50).on('value', function (graph_data) {
+                      ref_graph.orderByKey().limitToLast(12).on('value', function (graph_data) {
                         myChart.data.labels = [];
                         myChart.data.datasets[0].data = [];
                         myChart.data.datasets[1].data = [];
@@ -667,56 +667,84 @@
                               {
                                   label: 'Risco',
                                   data: [1,1,1,1,1,1],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'red',
                                   borderColor: 'red',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               {
                                   label: 'Temperatura',
                                   data: [2,2,2,2,2,2],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'blue',
                                   borderColor: 'blue',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               {
                                   label: 'Umidade',
                                   data: [3,3,3,3,3,3],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'green',
                                   borderColor: 'green',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               {
                                   label: 'Vento',
                                   data: [4,4,4,4,4,4],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'white',
                                   borderColor: 'white',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               {
                                   label: 'Pluviosidade',
                                   data: [5,5,5,5,5,5],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'yellow',
                                   borderColor: 'yellow',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               {
                                   label: 'Bateria',
                                   data: [6,6,6,6,6,6],
-                                  backgroundColor: 'transparent',
+                                  backgroundColor: 'brown',
                                   borderColor: 'brown',
-                                  borderWidth: 4,
+                                  borderWidth: 3,
+                                  fill: false,
                               },
                               ]
                           },
                           options: {
-                              scales: {
-                                  yAxes: [{
-                                      ticks: {
-                                          beginAtZero: true
-                                      }
-                                  }]
+                              title: {
+                                  display: true,
+                                  padding: 12,
+                                  fontSize: 20,
+                                  text: "Dados do Nó",
+                                },
+                              legend: {
+                                display: true,
+                                position: 'bottom',
+                                align: 'start',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20,
+                                    boxWidth: 6,
+                                    fontSize: 14,
+                                    fontStyle: 'bold'
+                                }
+                              },
+                              tooltips: {
+                                position: 'nearest',
+                                mode: 'index',
+                                intersect: false,
+                              },
+                              elements: {
+                                  point: {
+                                    pointStyle: 'circle',
+                                    radius: 1
+                                  }
                               }
-                          }
+                          },
                       });
                   </script>
                 </div>                  
