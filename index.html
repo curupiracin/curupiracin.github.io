@@ -138,10 +138,10 @@
                   </col> 
                   <script> 
                     // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
-                    var arrTest = [];
                     var markers = [];
                     var map;
                     var last_ref;
+                    var nodeGlobal;
                     
                     var ref_node = firebase.database().ref('Curupira/Nodes');                    
                     ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
@@ -153,7 +153,8 @@
                           console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
                           AddMarker(keys);
                           printInfo(keys);
-                          chartUpdate(keys);                          
+                          chartUpdate(keys,12);
+                          nodeGlobal = keys;                       
                         }    
                       });                      
                     });
@@ -216,15 +217,16 @@
                       markers[data.key] = marker; // add marker in the markers array... 
                       marker.addListener('click', function () {
                         printInfo(data);
-                        chartUpdate(data);
+                        chartUpdate(data, 12);
+                        nodeGlobal = data;
                       });                      
                     }
 
 
 
-                    function chartUpdate (data) {
+                    function chartUpdate (data, qtdData) {
                       ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                      ref_graph.orderByKey().limitToLast(12).on('value', function (graph_data) {
+                      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
                         myChart.data.labels = [];
                         myChart.data.datasets[0].data = [];
                         myChart.data.datasets[1].data = [];
@@ -654,7 +656,12 @@
 
           <div class="col-md-12">
               <div class="card ">
-                <div class="card-body ">
+                <div class="card-body">
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 12)"> Um dia </button> 
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 84)"> Uma semana </button> 
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 360)"> Um mês </button>
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 4380)"> Um Ano </button> 
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 100000)"> Máximo </button> 
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
                   <canvas id="myChart" width="400" height="200"></canvas>
                   <script>
@@ -719,7 +726,7 @@
                                   display: true,
                                   padding: 12,
                                   fontSize: 20,
-                                  text: "Dados do Nó",
+                                  text: "Informações do Nó",
                                 },
                               legend: {
                                 display: true,
