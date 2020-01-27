@@ -243,6 +243,13 @@
                           myChart.data.datasets[4].data.push(dado.val().pluviosidade);
                           myChart.data.datasets[5].data.push(dado.val().bateria);
                         });
+                        myChart.data.labels.reverse();
+                        myChart.data.datasets[0].data.reverse();
+                        myChart.data.datasets[1].data.reverse();
+                        myChart.data.datasets[2].data.reverse();
+                        myChart.data.datasets[3].data.reverse();
+                        myChart.data.datasets[4].data.reverse();
+                        myChart.data.datasets[5].data.reverse();
                       });
                       myChart.update();
                     }
@@ -583,7 +590,38 @@
               </div>
             </div>
 
-            <div class="col-lg-5 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-5 col-md-2">
+                      <div class="icon-big text-center icon-warning">
+                        <i><img width="42px" height="42px" src="assets/img/clock.png"/></i>
+                      </div>
+                    </div>
+                    <div class="col-7 col-md-10">
+                      <div class="numbers">
+                        <p class="card-category">Intervalo de Sensoreamento</p>  
+                      </div>
+
+                      <div class="btn-group col-12" style="width:100%" >
+                        <input type="text" id = "intervalo" class = "form-control" placeholder="Digite um intervalo de medida" />
+                        <button type = "submit" class = "btn btn-primary"  onclick = "envia_firebase()" style="margin: 0px 10px" >Atualizar</button>
+                      </div>
+                  </div>
+                </div>
+                <div class="card-footer ">
+                  <hr>
+                  <div class="stats">
+                    <i></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-5 col-md-6 col-sm-6">
               <div class="card card-stats">
                 <div class="card-body ">
                   <div class="row">
@@ -615,8 +653,6 @@
             </div>
           </div>
 
-          
-
 
           <div class="col-md-12">
               <div class="card ">
@@ -625,7 +661,7 @@
                   <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 84)"> Uma semana </button> 
                   <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 360)"> Um mês </button>
                   <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 4380)"> Um Ano </button> 
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 8760)"> Máximo </button> 
+                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 100000)"> Máximo </button> 
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
                   <canvas id="myChart" width="400" height="200"></canvas>
                   <script>
@@ -662,8 +698,8 @@
                               {
                                   label: 'Vento',
                                   data: [4,4,4,4,4,4],
-                                  backgroundColor: 'gray',
-                                  borderColor: 'gray',
+                                  backgroundColor: 'white',
+                                  borderColor: 'white',
                                   borderWidth: 3,
                                   fill: false,
                               },
