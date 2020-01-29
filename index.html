@@ -23,6 +23,233 @@
   <link href="assets/css/paper-dashboard.css?v=2.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="assets/demo/demo.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+
+  
+  <script>          
+    var color_array = ['rgb(220,35,154,0.3)', 'rgb(239,16,72,0.3)', 'rgb(0,255,154,0.3)'
+   ,'rgb(0,152,255,0.3)', 'rgb(249,255,0,0.3)', 'rgb(136,42,213,0.3)', 'rgb(255,159,0,0.3)']
+
+    function addData(chart, label, color, data, labels) {      
+
+      chart.data.datasets.push({
+        label: label,
+        borderColor: color,
+        data: data,
+        fill: false
+      });
+      chart.data.labels = labels
+      chart.update();
+    }
+    
+    function chartUpdate(data, qtdData){
+      qtdData = 10;
+      var temperature_fb = []
+      var umidity_fb = []
+      var fwi_fb = []
+      var battery_fb = []
+      var pluviosity_fb = []
+      var wind_speed_fb = []
+
+      var labels_fb = []
+      var label_fb
+      
+      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {       
+
+        graph_data.forEach(function (dado) {         
+          temperature_fb.push(dado.val().temperatura)
+          umidity_fb.push(dado.val().umidade)   
+          fwi_fb.push(dado.val().fwi)
+          battery_fb.push(dado.val().bateria)     
+          pluviosity_fb.push(dado.val().pluviosidade)
+          wind_speed_fb.push(dado.val().vel_do_vento)               
+          label_fb = data.key;
+          labels_fb.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2))
+        });        
+      });
+    
+			var newColor = color_array[label_fb[label_fb.length-1] % color_array.length];
+      addData(graf_temperature, label_fb, newColor, temperature_fb, labels_fb)
+      addData(graf_umidity, label_fb, newColor, umidity_fb, labels_fb)
+      addData(graf_pluviosity, label_fb, newColor, pluviosity_fb, labels_fb)
+      addData(graf_battery, label_fb, newColor, battery_fb, labels_fb)
+      addData(graf_wind, label_fb, newColor, wind_speed_fb, labels_fb)   
+      addData(graf_fwi, label_fb, newColor, fwi_fb, labels_fb)          
+
+    }
+  
+
+    function chartUpdate1 (data, qtdData) {
+      qtdData = 30;
+      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_temperature.data.labels = [];
+        graf_temperature.data.datasets[0].data = [];
+        graf_temperature.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_temperature.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_temperature.data.datasets[0].data.push(dado.val().temperatura);         
+        });
+      });
+      graf_temperature.update();
+      
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_fwi.data.labels = [];
+        graf_fwi.data.datasets[0].data = [];
+        graf_fwi.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_fwi.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_fwi.data.datasets[0].data.push(dado.val().fwi);         
+        });
+      });
+      graf_fwi.update();
+
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_umidity.data.labels = [];
+        graf_umidity.data.datasets[0].data = [];
+        graf_umidity.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_umidity.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_umidity.data.datasets[0].data.push(dado.val().umidade);         
+        });
+      });
+      graf_umidity.update();
+
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_pluviosity.data.labels = [];
+        graf_pluviosity.data.datasets[0].data = [];
+        graf_pluviosity.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_pluviosity.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_pluviosity.data.datasets[0].data.push(dado.val().pluviosidade);         
+        });
+      });
+      graf_pluviosity.update();
+
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_wind.data.labels = [];
+        graf_wind.data.datasets[0].data = [];
+        graf_wind.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_wind.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_wind.data.datasets[0].data.push(dado.val().vel_do_vento);         
+        });
+      });
+      graf_wind.update();
+
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
+        graf_battery.data.labels = [];
+        graf_battery.data.datasets[0].data = [];
+        graf_battery.data.datasets[0].label = data.key;
+
+        graph_data.forEach(function (dado) {
+          graf_battery.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
+          graf_battery.data.datasets[0].data.push(dado.val().bateria);
+        });
+      });
+      graf_battery.update();
+
+    }
+    
+    var ctx_temperature, data_temperature, graf_temperature
+    var ctx_umidity, data_umidity, graf_umidity
+    var ctx_wind, data_wind, graf_wind
+    var ctx_fwi, data_fwi, graf_fwi
+    var ctx_battery, data_battery, graf_battery
+    var ctx_pluviosity, data_pluviosity, graf_pluviosity
+    
+//tenho que iniciar essa função
+    $(function () {
+      ctx_temperature = document.getElementById("id_graf_temperature").getContext('2d');
+      ctx_umidity = document.getElementById("id_graf_umidity").getContext('2d');
+      ctx_wind = document.getElementById("id_graf_wind").getContext('2d');
+      ctx_fwi = document.getElementById("id_graf_fwi").getContext('2d');
+      ctx_battery = document.getElementById("id_graf_battery").getContext('2d');
+      ctx_pluviosity = document.getElementById("id_graf_pluviosity").getContext('2d');
+    /*
+      data = {
+          datasets: [{            
+              data: [10],
+              backgroundColor: 'rgba(0, 255, 0, 0.3)',
+              fill: false
+          }],
+          labels: [
+              'Request'
+          ]
+      };*/
+      function config_chart(y_string){
+        return {
+          type: 'line',
+         
+          options: {            
+            scales: {
+              yAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: y_string 
+                }
+              }],
+              xAxes: [{
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Day'
+                }
+              }]
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: 'top',
+              align: 'center',
+              usePointStyle: true,
+              labels: {
+                boxWidth: 12
+              }
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              align: 'start',
+              labels: {
+                  usePointStyle: true,
+                  padding: 20,
+                  boxWidth: 6,
+                  fontSize: 14,
+                  fontStyle: 'bold'
+              }
+            },
+            tooltips: {
+              position: 'nearest',
+              mode: 'index',
+              intersect: false,
+            },
+            elements: {
+                point: {
+                  pointStyle: 'circle',
+                  radius: 1
+                }
+            }
+          }
+        }
+      }
+      
+      graf_temperature = new Chart(ctx_temperature, config_chart('Temperature (ºC)'));
+      graf_umidity = new Chart(ctx_umidity, config_chart('Umidity (%)'));
+      graf_battery = new Chart(ctx_battery, config_chart('Voltage (v)'));
+      graf_fwi = new Chart(ctx_fwi, config_chart(''));
+      graf_pluviosity = new Chart(ctx_pluviosity, config_chart('Pluviosity (mm)'));
+      graf_wind = new Chart(ctx_wind, config_chart('Wind Speed (km/h)'));
+    });
+
+  </script>
+  
 </head>
 
 <body class="">
@@ -31,19 +258,16 @@
   
   <script> // Initialize Firebase   
     var config = {
-                apiKey: "AIzaSyCFXxCK9mvifw7ATUpI6GxF2ZdUa5NgItk",
-                authDomain: "curupira-cin.firebaseapp.com",
-                databaseURL: "https://curupira-cin.firebaseio.com",
-                projectId: "curupira-cin",
-                storageBucket: "",
-                messagingSenderId: "355244565209",
-                appId: "1:355244565209:web:23440696e2082421"
-              };
+      apiKey: "AIzaSyCFXxCK9mvifw7ATUpI6GxF2ZdUa5NgItk",
+      authDomain: "curupira-cin.firebaseapp.com",
+      databaseURL: "https://curupira-cin.firebaseio.com",
+      projectId: "curupira-cin",
+      storageBucket: "",
+      messagingSenderId: "355244565209",
+      appId: "1:355244565209:web:23440696e2082421"
+    };
               
     firebase.initializeApp(config);    
-    // var timeInterval = firebase.database().ref("Curupira");
-    // var valInterval = {timeInterval : 100}
-    // timeInterval.update(valInterval);
   
     function envia_firebase(){
       var novo_periodo = parseInt(document.getElementById("intervalo").value.toString(), 10);
@@ -72,752 +296,722 @@
     }
   </script>
 
-<div class="main-panel">
-      <!-- Navbar -->  
-      <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#pablo">Curupira</a>
-          </div>
-          <button id="overlay" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" onclick= 'myFunction()'>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-            <span class="navbar-toggler-bar navbar-kebab"></span>
-          </button>
-          <style>
-            #overlay {
-              position: fixed;
-              display: none;
-              width: 100%;
-              height: 100%;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              background-color: rgba(0,0,0,0.9);
-              z-index: 2;
-              touch-action: none;
-            }
-          </style>
-          <script>
-            var boolean = 1;
-            function myFunction() {
-              var op = ["none", "block"];
-              document.getElementById("overlay").style.display = op[boolean];
-              if(boolean == 0){
-                boolean = 1;
-              }else{boolean = 0;}
-            }
-          </script>
-          <div class="collapse navbar-collapse justify-content-end" id="navigation">
-            <ul onclick='myFunction()' class="navbar-nav"> 
-              <li class="nav-item">
-                <a class="nav-link btn-rotate" href="#pablo">
-                  <i  class="nc-icon nc-settings-gear-65"></i>
-                  <p>
-                    <span class="d-lg-none d-md-block">Account</span>
-                  </p>
-                </a>
-              </li>
-            </ul>
-          </div>
+  <div class="main-panel">
+    <!-- Navbar -->  
+    <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
+      <div class="container-fluid">
+        <div class="navbar-wrapper">
+          <a class="navbar-brand" href="#pablo">Curupira</a>
         </div>
-      </nav>
-      <!-- End Navbar -->
-      <div class="content">
-        <div style="height: 100%; width: 100%;">
-          <!-- Map -->
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card ">
-                <div class="card-body ">
-                  <col>
-                    <row>
-                      <div style="width: 100%; height: 500px;" id="map"></div>
-                    </row>
-                  </col> 
-                  <script> 
-                    // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
-                    var markers = [];
-                    var map;
-                    var last_ref;
-                    var nodeGlobal;
-                    
-                    var ref_node = firebase.database().ref('Curupira/Nodes');                    
-                    ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
-                      console.log("Chave: " + nodes.key);
-                      var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
-                      ref_node_info.orderByKey().on('value', function (keys) { // Informações de um nó      
-                        
-                        if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
-                          console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
-                          AddMarker(keys);
-                          printInfo(keys);
-                          chartUpdate(keys,12);
-                          nodeGlobal = keys;                       
-                        }    
-                      });                      
-                    });
-
-                    function initMap() { // Google Map Initialization...                                        
-                      map = new google.maps.Map(document.getElementById('map'), {
-                        zoom: 20,
-                        gestureHandling: 'greedy',
-                        streetViewControl: false,
-                        styles : [{
-                          featureType: "poi",
-                          stylers: [{
-                             visibility: "off" 
-                          }]}],
-                        center: new google.maps.LatLng(-5.832281, -35.205511),
-                        mapTypeId: 'roadmap'
-                      });
-
-                      map.addListener('click', function (local) {
-                      console.log("Cilque no mapa: [" + local.latLng.lat() + "] [ " + local.latLng.lng());
-                      document.getElementById("latitude").value = local.latLng.lat();
-                      document.getElementById("longitude").value = local.latLng.lng();
-
-                    });
-                    }
-
-
-        
-                    function AddMarker (data) {
-                      console.log("Call Addmarker...");                
-
-                      var position = { lat: data.val().latitude, lng: data.val().longitude};
-                      
-                      var marker = new google.maps.Marker({                             
-                          position: position,
-                          title:data.key.toString(),                     
-                          map: map
-                      });
-
-                      // var ref_test = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                      // ref_test.orderByKey().limitToLast(1).on('value', function (data_test) {
-                      //   data_test.forEach(function (data_test_1) {
-                      //     console.log("Agr vai " + data_test_1.key);
-
-                      //     if (data_test_1.val().fumaca == 1) {
-                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/firedept.png';
-                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/firedept.png');
-                      //     }
-                      //     else if (data_test_1.val().alive == 0) {
-                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
-                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/caution.png');
-                      //     }
-                      //     else {
-                      //       //imageIcon = 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
-                      //       marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
-                      //     }
-                      //   });
-                      // });
-
-                      markers[data.key] = marker; // add marker in the markers array... 
-                      marker.addListener('click', function () {
-                        printInfo(data);
-                        chartUpdate(data, 12);
-                        nodeGlobal = data;
-                      });                      
-                    }
-
-
-
-                    function chartUpdate (data, qtdData) {
-                      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-                        myChart.data.labels = [];
-                        myChart.data.datasets[0].data = [];
-                        myChart.data.datasets[1].data = [];
-                        myChart.data.datasets[2].data = [];
-                        myChart.data.datasets[3].data = [];
-                        myChart.data.datasets[4].data = [];
-                        myChart.data.datasets[5].data = [];
-                        graph_data.forEach(function (dado) {
-                          myChart.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-                          myChart.data.datasets[0].data.push(dado.val().fwi);
-                          myChart.data.datasets[1].data.push(dado.val().temperatura);
-                          myChart.data.datasets[2].data.push(dado.val().umidade);
-                          myChart.data.datasets[3].data.push(dado.val().vel_do_vento);
-                          myChart.data.datasets[4].data.push(dado.val().pluviosidade);
-                          myChart.data.datasets[5].data.push(dado.val().bateria);
-                        });
-                      });
-                      myChart.update();
-                    }
-
-                    function printInfo (data) {
-                        if(last_ref){
-                          console.log("retirando evento anterior");
-                          last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
-                        } 
-                        var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                        var func_att_data = function (sensores) {  //Sensoriamento 
-                          sensores.forEach(function(dado) {                      
-                            document.getElementById("Temperatura").innerHTML = dado.val().temperatura.toString().substr(0, 5) + "°C";
-                            document.getElementById("Umidade").innerHTML = dado.val().umidade.toString().substr(0, 5) + "%";
-                            document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
-                            document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
-                            document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
-                            document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";
-
-                            document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
-                            document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
-
-                            document.getElementById("noSelec").innerHTML = dado.val().id.toString();
-                            document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
-                            var valorFuma = parseInt(dado.val().fumaca, 10);
-                            alteraFuma(valorFuma);
-                            if (dado.val().alive == 1) {
-                              document.getElementById("statusNode").style.color = 'green';
-                            }
-                            else {
-                              document.getElementById("statusNode").style.color = 'red';
-                            }
-                            document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
-                            document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Carga da bateria normal" : "Carga da bateria baixa";
-                            var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
-                            alteraDiv(valorRisco);
-
-                          });
-
-                          function alteraFuma (valorFuma) {
-                            if (valorFuma == 1) {
-                                document.getElementById('fumaBack').style.backgroundColor = 'red';
-                            }
-                            else {
-                                document.getElementById('fumaBack').style.backgroundColor = '#E6E6E6';
-                            }
-                          }
-
-                          function alteraDiv (valorRisco) {
-                            if (valorRisco < 8) {
-                              document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Baixo";
-                              document.getElementById("fraseRisco").style.color = 'black';
-                            }
-                            else if (valorRisco < 16) {
-                              document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Moderado";
-                              document.getElementById("fraseRisco").style.color = 'black';
-                            }
-                            else if (valorRisco < 24) {
-                              document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!";
-                              document.getElementById("fraseRisco").style.color = 'black';
-                            }
-                            else if (valorRisco < 33) {
-                              document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!!!";
-                              document.getElementById("fraseRisco").style.color = 'white';
-                            }
-                            else if (valorRisco < 41) {
-                              document.getElementById('testeBack').style.backgroundColor = '#D10111';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
-                              document.getElementById("fraseRisco").style.color = 'white';
-                            }
-                            else {
-                              document.getElementById('testeBack').style.backgroundColor = '#AE000A';
-                              document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
-                              document.getElementById("fraseRisco").style.color = 'white';
-                            }
-                          }                         
-                        }
-                        last_ref = ref_node_sensor;
-                        ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
-                    }
-
-                  </script>
-                  <!--  Google Maps Plugin    -->
-                  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBftlLZg9rAwLppSdyGTcHAikIaNb9YUJw&callback=initMap"></script>
-                </div>                  
-              </div>
-            </div>
-          </div>
-          <!-- End Map -->
-
-          <!-- Basic Info Node -->
-          <div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats" id="testeBack">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/fire.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Risco de Incêndio</p>
-                        <p class="card-title"><p id="risco">NULL
-                        </p>
-                      </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i class="fa fa-refresh"></i> <span id = "fraseRisco"> NULL </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats" id="fumaBack">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/forest-fire.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Fumaça</p>
-                        <p class="card-title" id = 'fumaca'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/id-card.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Nó selecionado</p>
-                        <p class="card-title"><p id="noSelec">NULL
-                          <script>
-                          </script>
-                        </p>
-                      </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i class="fa fa-refresh"></i> Ultima atualização em <span id="ultima_att_data"> __/__ </span> às <span id="ultima_att_hora"> -- : -- </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/list.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Status do Nó</p>
-                        <p class="card-title"><p id="statusNode">NULL
-                          <script>
-                          </script>
-                        </p>
-                      </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/empty.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Nivel de Bateria</p>
-                        <p class="card-title"><p id="nivelBateria">NULL
-                          <script>
-                          </script>
-                        </p>
-                      </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i> <span id="msgBateria"> </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/temperature.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Temperatura</p>
-                        <p class="card-title" id = 'Temperatura'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/humidity.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Umidade</p>
-                        <p class="card-title" id = 'Umidade'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/windy.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Velocidade do Vento</p>
-                        <p class="card-title" id = 'velocidadeVento'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-4">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/rain.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                      <div class="numbers">
-                        <p class="card-category">Pluviosidade</p>
-                        <p class="card-title" id = 'pluviosidade'> NULL <p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-5 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-5 col-md-2">
-                      <div class="icon-big text-center icon-warning">
-                        <i><img width="42px" height="42px" src="assets/img/marker.png"/></i>
-                      </div>
-                    </div>
-                    <div class="col-7 col-md-10">
-                      <div class="numbers">
-                        <p class="card-category">Adicionar Novo Nó</p>  
-                      </div>
-
-                      <div class="btn-group col-md-12" style="width:100%" >
-                        <input type="text" id = "NewNodeId" class = "form-control" placeholder="ID" />
-                        <input type="text" id = "latitude" class = "form-control" placeholder="Latitude">
-                        <input type="text" id = "longitude" class = "form-control" placeholder="Longitude">
-                        <button type = "submit" class = "btn btn-primary"  onclick = "newNode()" style="margin: 0px 10px" >Enviar</button>
-                      </div>
-                  </div>
-                </div>
-                <div class="card-footer ">
-                  <hr>
-                  <div class="stats">
-                    <i></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          
-
-
-          <div class="col-md-12">
-              <div class="card ">
-                <div class="card-body">
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 12)"> Um dia </button> 
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 84)"> Uma semana </button> 
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 360)"> Um mês </button>
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 4380)"> Um Ano </button> 
-                  <button class="btn btn-outline-primary" onclick="chartUpdate(nodeGlobal, 8760)"> Máximo </button> 
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-                  <canvas id="myChart" width="400" height="200"></canvas>
-                  <script>
-                      var ctx = document.getElementById('myChart').getContext('2d');
-                      var myChart = new Chart(ctx, {
-                          type: 'line',
-                          data: {
-                              labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                              datasets: [
-                              {
-                                  label: 'Risco',
-                                  data: [1,1,1,1,1,1],
-                                  backgroundColor: 'red',
-                                  borderColor: 'red',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              {
-                                  label: 'Temperatura',
-                                  data: [2,2,2,2,2,2],
-                                  backgroundColor: 'blue',
-                                  borderColor: 'blue',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              {
-                                  label: 'Umidade',
-                                  data: [3,3,3,3,3,3],
-                                  backgroundColor: 'green',
-                                  borderColor: 'green',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              {
-                                  label: 'Vento',
-                                  data: [4,4,4,4,4,4],
-                                  backgroundColor: 'gray',
-                                  borderColor: 'gray',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              {
-                                  label: 'Pluviosidade',
-                                  data: [5,5,5,5,5,5],
-                                  backgroundColor: 'yellow',
-                                  borderColor: 'yellow',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              {
-                                  label: 'Bateria',
-                                  data: [6,6,6,6,6,6],
-                                  backgroundColor: 'brown',
-                                  borderColor: 'brown',
-                                  borderWidth: 3,
-                                  fill: false,
-                              },
-                              ]
-                          },
-                          options: {
-                              title: {
-                                  display: true,
-                                  padding: 12,
-                                  fontSize: 20,
-                                  text: "Informações do Nó",
-                                },
-                              legend: {
-                                display: true,
-                                position: 'bottom',
-                                align: 'start',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    boxWidth: 6,
-                                    fontSize: 14,
-                                    fontStyle: 'bold'
-                                }
-                              },
-                              tooltips: {
-                                position: 'nearest',
-                                mode: 'index',
-                                intersect: false,
-                              },
-                              elements: {
-                                  point: {
-                                    pointStyle: 'circle',
-                                    radius: 1
-                                  }
-                              }
-                          },
-                      });
-                  </script>
-                </div>                  
-              </div>
-
-          <!-- EndBasic Info Node -->
-
-          <!--
+        <button id="overlay" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" onclick= 'myFunction()'>
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+        </button>
+        <style>
+          #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2;
+            touch-action: none;
+          }
+        </style>
+        <script>
+          var boolean = 1;
+          function myFunction() {
+            var op = ["none", "block"];
+            document.getElementById("overlay").style.display = op[boolean];
+            if(boolean == 0){
+              boolean = 1;
+            }else{boolean = 0;}
+          }
+        </script>
+        <div class="collapse navbar-collapse justify-content-end" id="navigation">
+          <ul onclick='myFunction()' class="navbar-nav"> 
+            <li class="nav-item">
+              <a class="nav-link btn-rotate" href="#pablo">
+                <i  class="nc-icon nc-settings-gear-65"></i>
+                <p>
+                  <span class="d-lg-none d-md-block">Account</span>
+                </p>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header ">
-                <h5 class="card-title">Índice de Risco</h5>
-                <p class="card-category">Porcentagem (%)</p>
-              </div>
-              <div class="card-body ">
-                <canvas id=chartHours width="400" height="100"></canvas>
-                
-              </div>
-              <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i> Atualizado recentemente
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card ">
-              <div class="card-header ">
-                <h5 class="card-title">Funcionamento do Sistema</h5>
-                <p class="card-category">Resumo de erros e retornos do sistema</p>
-              </div>
-              <div class="card-body ">
-                <canvas id="chartEmail"></canvas>
-              </div>
-              <div class="card-footer ">
-                <div class="legend">
-                <i class="fa fa-circle" style="Color:rgb(0,255,85);"></i> Normal
-                  <i class="fa fa-circle text-warning"></i> Alerta
-                  <i class="fa fa-circle" style="Color: rgb(255,0,0)"></i> Erro
-                </div>
-                <hr>
-                <div class="stats">
-                  <i class="fa fa-refresh"></i> Atualizado recentemente
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="card card-chart">
-              <div class="card-header">
-                <h5 class="card-title">Índice de Chuva</h5>
-                <p class="card-category">Em milímetros (mm)</p>
-              </div>
-              <div class="card-body">
-                <canvas id="speedChart" width="400" height="100"></canvas>
-              </div>
-              <div class="card-footer">
-                <hr/>
-                <div class="card-stats">
-                  <i class="fa fa-refresh"></i> Atualizado recentemente
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      -->
-          
       </div>
-      <footer class="footer footer-black  footer-white ">
-        <div class="container-fluid">
-          <div class="row">
-            <nav class="footer-nav">
-              <ul>
-                
-              </ul>
-            </nav>
-            <div class="credits ml-auto">
-              <span class="copyright">
-                ©
-                <script>
-                  document.write(new Date().getFullYear())
-                </script>, Curupira
-              </span>
+    </nav>
+    <!-- End Navbar -->
+    <div class="content">
+      <div style="height: 100%; width: 100%;">
+        <!-- Map -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-body ">
+                <col>
+                  <row>
+                    <div style="width: 100%; height: 500px;" id="map"></div>
+                  </row>
+                </col> 
+                <script> 
+                  // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
+                  var markers = [];
+                  var map;
+                  var last_ref;
+                  var nodeGlobal;
+                  
+                  var ref_node = firebase.database().ref('Curupira/Nodes');                    
+                  ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
+                    console.log("Chave: " + nodes.key);
+                    var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
+                    ref_node_info.orderByKey().on('value', function (keys) { // Informações de um nó      
+                      
+                      if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
+                        console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
+                        AddMarker(keys);
+                        printInfo(keys);
+                       // chartUpdate(keys,12);
+                        nodeGlobal = keys;                       
+                      }    
+                    });                      
+                  });
+
+                  function initMap() { // Google Map Initialization...                                        
+                    map = new google.maps.Map(document.getElementById('map'), {
+                      zoom: 20,
+                      gestureHandling: 'greedy',
+                      streetViewControl: false,
+                      styles : [{
+                        featureType: "poi",
+                        stylers: [{
+                            visibility: "off" 
+                        }]}],
+                      center: new google.maps.LatLng(-5.832281, -35.205511),
+                      mapTypeId: 'roadmap'
+                    });
+
+                    map.addListener('click', function (local) {
+                    console.log("Cilque no mapa: [" + local.latLng.lat() + "] [ " + local.latLng.lng());
+                    document.getElementById("latitude").value = local.latLng.lat();
+                    document.getElementById("longitude").value = local.latLng.lng();
+
+                  });
+                  }
+
+
+      
+                  function AddMarker (data) {
+                    console.log("Call Addmarker...");                
+
+                    var position = { lat: data.val().latitude, lng: data.val().longitude};
+                    
+                    var marker = new google.maps.Marker({                             
+                        position: position,
+                        title:data.key.toString(),                     
+                        map: map
+                    });
+
+                    // var ref_test = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+                    // ref_test.orderByKey().limitToLast(1).on('value', function (data_test) {
+                    //   data_test.forEach(function (data_test_1) {
+                    //     console.log("Agr vai " + data_test_1.key);
+
+                    //     if (data_test_1.val().fumaca == 1) {
+                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/firedept.png';
+                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/firedept.png');
+                    //     }
+                    //     else if (data_test_1.val().alive == 0) {
+                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
+                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/caution.png');
+                    //     }
+                    //     else {
+                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
+                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
+                    //     }
+                    //   });
+                    // });
+
+                    markers[data.key] = marker; // add marker in the markers array... 
+                    marker.addListener('click', function () {
+                      printInfo(data);
+                      chartUpdate(data, 12);
+                      nodeGlobal = data;
+                    });                      
+                  }
+
+
+
+                  
+
+                  function printInfo (data) {
+                      if(last_ref){
+                        console.log("retirando evento anterior");
+                        last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
+                      } 
+                      var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+                      var func_att_data = function (sensores) {  //Sensoriamento 
+                        sensores.forEach(function(dado) {                      
+                          document.getElementById("Temperatura").innerHTML = dado.val().temperatura.toString().substr(0, 5) + "°C";
+                          document.getElementById("Umidade").innerHTML = dado.val().umidade.toString().substr(0, 5) + "%";
+                          document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
+                          document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
+                          document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
+                          document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";
+
+                          document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
+                          document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
+
+                          document.getElementById("noSelec").innerHTML = dado.val().id.toString();
+                          document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
+                          var valorFuma = parseInt(dado.val().fumaca, 10);
+                          alteraFuma(valorFuma);
+                          if (dado.val().alive == 1) {
+                            document.getElementById("statusNode").style.color = 'green';
+                          }
+                          else {
+                            document.getElementById("statusNode").style.color = 'red';
+                          }
+                          document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
+                          document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Carga da bateria normal" : "Carga da bateria baixa";
+                          var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
+                          alteraDiv(valorRisco);
+
+                        });
+
+                        function alteraFuma (valorFuma) {
+                          if (valorFuma == 1) {
+                              document.getElementById('fumaBack').style.backgroundColor = 'red';
+                          }
+                          else {
+                              document.getElementById('fumaBack').style.backgroundColor = '#E6E6E6';
+                          }
+                        }
+
+                        function alteraDiv (valorRisco) {
+                          if (valorRisco < 8) {
+                            document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Baixo";
+                            document.getElementById("fraseRisco").style.color = 'black';
+                          }
+                          else if (valorRisco < 16) {
+                            document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Moderado";
+                            document.getElementById("fraseRisco").style.color = 'black';
+                          }
+                          else if (valorRisco < 24) {
+                            document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!";
+                            document.getElementById("fraseRisco").style.color = 'black';
+                          }
+                          else if (valorRisco < 33) {
+                            document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!!!";
+                            document.getElementById("fraseRisco").style.color = 'white';
+                          }
+                          else if (valorRisco < 41) {
+                            document.getElementById('testeBack').style.backgroundColor = '#D10111';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                            document.getElementById("fraseRisco").style.color = 'white';
+                          }
+                          else {
+                            document.getElementById('testeBack').style.backgroundColor = '#AE000A';
+                            document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                            document.getElementById("fraseRisco").style.color = 'white';
+                          }
+                        }                         
+                      }
+                      last_ref = ref_node_sensor;
+                      ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
+                  }
+
+                </script>
+                <!--  Google Maps Plugin    -->
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBftlLZg9rAwLppSdyGTcHAikIaNb9YUJw&callback=initMap"></script>
+              </div>                  
             </div>
           </div>
         </div>
-      </footer>
+        <!-- End Map -->
+
+        <!-- Basic Info Node -->
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" id="testeBack">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/fire.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Risco de Incêndio</p>
+                      <p class="card-title"><p id="risco">NULL
+                      </p>
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-refresh"></i> <span id = "fraseRisco"> NULL </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats" id="fumaBack">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/forest-fire.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Fumaça</p>
+                      <p class="card-title" id = 'fumaca'> NULL <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/id-card.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Nó selecionado</p>
+                      <p class="card-title"><p id="noSelec">NULL
+                        <script>
+                        </script>
+                      </p>
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-refresh"></i> Ultima atualização em <span id="ultima_att_data"> __/__ </span> às <span id="ultima_att_hora"> -- : -- </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/list.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Status do Nó</p>
+                      <p class="card-title"><p id="statusNode">NULL
+                        <script>
+                        </script>
+                      </p>
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/empty.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Nivel de Bateria</p>
+                      <p class="card-title"><p id="nivelBateria">NULL
+                        <script>
+                        </script>
+                      </p>
+                    </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i> <span id="msgBateria"> </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/temperature.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Temperatura</p>
+                      <p class="card-title" id = 'Temperatura'> NULL <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/humidity.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Umidade</p>
+                      <p class="card-title" id = 'Umidade'> NULL <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/windy.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Velocidade do Vento</p>
+                      <p class="card-title" id = 'velocidadeVento'> NULL <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/rain.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Pluviosidade</p>
+                      <p class="card-title" id = 'pluviosidade'> NULL <p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-2">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/marker.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-10">
+                    <div class="numbers">
+                      <p class="card-category">Adicionar Novo Nó</p>  
+                    </div>
+
+                    <div class="btn-group col-md-12" style="width:100%" >
+                      <input type="text" id = "NewNodeId" class = "form-control" placeholder="ID" />
+                      <input type="text" id = "latitude" class = "form-control" placeholder="Latitude">
+                      <input type="text" id = "longitude" class = "form-control" placeholder="Longitude">
+                      <button type = "submit" class = "btn btn-primary"  onclick = "newNode()" style="margin: 0px 10px" >Enviar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Graficos  -->
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Fire Weather Index
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_fwi" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Temperature
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_temperature" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>  
+        
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Umidity
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_umidity" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Battery Voltage
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_battery" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Pluviosity
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_pluviosity" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-12">            
+            <div class="card card-stats">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-12">
+                    Wind Speed
+                  </div>
+                </div>
+              </div>
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-12">
+                    <canvas id="id_graf_wind" style="min-height: 250px; min-width: auto;"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fim Graficos  -->
+      
+      </div>
     </div>
+    <footer class="footer footer-black  footer-white ">
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="footer-nav">
+            <ul>
+              
+            </ul>
+          </nav>
+          <div class="credits ml-auto">
+            <span class="copyright">
+              ©
+              <script>
+                document.write(new Date().getFullYear())
+              </script>, Curupira
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
+ 
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
 
   <!--   Core JS Files   -->
   <script src="assets/js/core/jquery.min.js"></script>
   <script src="assets/js/core/popper.min.js"></script>
   <script src="assets/js/core/bootstrap.min.js"></script>
   <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <!-- Chart JS -->
-  <script src="assets/js/plugins/chartjs.min.js"></script>
+  
   <!--  Notifications Plugin    -->
   <script src="assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
