@@ -35,6 +35,7 @@
 
       chart.data.datasets.push({
         label: label,
+        backgroundColor: color,
         borderColor: color,
         data: data,
         fill: false
@@ -716,13 +717,14 @@
                     <div class="numbers">
                       <p class="card-category">Adicionar Novo Nó</p>  
                     </div>
-
-                    <div class="btn-group col-md-12" style="width:100%" >
-                      <input type="text" id = "NewNodeId" class = "form-control" placeholder="ID" />
-                      <input type="text" id = "latitude" class = "form-control" placeholder="Latitude">
-                      <input type="text" id = "longitude" class = "form-control" placeholder="Longitude">
-                      <button type = "submit" class = "btn btn-primary"  onclick = "newNode()" style="margin: 0px 10px" >Enviar</button>
-                    </div>
+                    <row>
+                      <div class="btn-group col-md-12" style="width:100%" >
+                        <input type="text" id = "NewNodeId" class = "form-control" placeholder="ID" />
+                        <input type="text" id = "latitude" class = "form-control" placeholder="Latitude">
+                        <input type="text" id = "longitude" class = "form-control" placeholder="Longitude">
+                        <button type = "submit" class = "btn btn-primary"  onclick = "newNode()" style="margin: 0px 10px" >Enviar</button>
+                      </div>
+                    </row>
                   </div>
                 </div>
               </div>
