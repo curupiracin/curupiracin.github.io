@@ -73,14 +73,35 @@
           labels_fb.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2))
         });        
       });
+      var data = new Date();
+      //Pegar a data, para casar com os valores
+      switch(qtdData){
+        case 'day' :          
+          labels_fb = ['00:00', '08:00', '16:00', '23:59']
+        case 'week' :
+          labels_fb = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']          
+        case 'month' : 
+          labels_fb = ['10', '20', '30']
+        case 'year' :
+          labels_fb = ['', '20', '30']
+      }
       
-			newColor = color_array[label_fb[label_fb.length-1] % color_array.length];
-      addData(graf_temperature, label_fb, newColor, temperature_fb, labels_fb)
-      addData(graf_umidity, label_fb, newColor, umidity_fb, labels_fb)
-      addData(graf_pluviosity, label_fb, newColor, pluviosity_fb, labels_fb)
-      addData(graf_battery, label_fb, newColor, battery_fb, labels_fb)
-      addData(graf_wind, label_fb, newColor, wind_speed_fb, labels_fb)   
-      addData(graf_fwi, label_fb, newColor, fwi_fb, labels_fb)
+
+      var labels = []
+
+      for(var k = 0 ; k < graf_temperature.data.datasets.length ; k++)
+        labels.push(graf_temperature.data.datasets[k].label)      
+
+      if(labels.indexOf(data.key) == -1){
+        newColor = color_array[label_fb[label_fb.length-1] % color_array.length];
+        addData(graf_temperature, label_fb, newColor, temperature_fb, labels_fb)
+        addData(graf_umidity, label_fb, newColor, umidity_fb, labels_fb)
+        addData(graf_pluviosity, label_fb, newColor, pluviosity_fb, labels_fb)
+        addData(graf_battery, label_fb, newColor, battery_fb, labels_fb)
+        addData(graf_wind, label_fb, newColor, wind_speed_fb, labels_fb)   
+        addData(graf_fwi, label_fb, newColor, fwi_fb, labels_fb)
+      }
+			
     }
   
     function chartUpdateSize(chart, qtdData, info_type){
@@ -103,11 +124,9 @@
             labels_fb.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2))
           });        
         });
-        newColor = color_array[label_resize[k][label_resize[k].length-1] % color_array.length];
-       
+        newColor = color_array[label_resize[k][label_resize[k].length-1] % color_array.length];       
         addData(chart, label_resize[k], newColor, info_fb, labels_fb)
       }
-      
     }  
     
     //tenho que iniciar essa função
@@ -131,6 +150,10 @@
                 }
               }],
               xAxes: [{
+                ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 5
+                },
                 scaleLabel: {
                   display: true,
                   labelString: 'Day'
