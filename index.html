@@ -28,8 +28,8 @@
 
   
   <script>          
-    var color_array = ['rgb(220,35,154,0.3)', 'rgb(239,16,72,0.3)', 'rgb(0,255,154,0.3)'
-   ,'rgb(0,152,255,0.3)', 'rgb(249,255,0,0.3)', 'rgb(136,42,213,0.3)', 'rgb(255,159,0,0.3)']
+    var color_array = ['rgb(220,35,154,0.8)', 'rgb(239,16,72,0.8)', 'rgb(0,255,154,0.8)'
+   ,'rgb(0,152,255,0.8)', 'rgb(249,255,0,0.8)', 'rgb(136,42,213,0.8)', 'rgb(255,159,0,0.8)']
 
     function addData(chart, label, color, data, labels) {      
 
@@ -80,84 +80,6 @@
 
     }
   
-
-    function chartUpdate1 (data, qtdData) {
-      qtdData = 30;
-      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_temperature.data.labels = [];
-        graf_temperature.data.datasets[0].data = [];
-        graf_temperature.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_temperature.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_temperature.data.datasets[0].data.push(dado.val().temperatura);         
-        });
-      });
-      graf_temperature.update();
-      
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_fwi.data.labels = [];
-        graf_fwi.data.datasets[0].data = [];
-        graf_fwi.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_fwi.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_fwi.data.datasets[0].data.push(dado.val().fwi);         
-        });
-      });
-      graf_fwi.update();
-
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_umidity.data.labels = [];
-        graf_umidity.data.datasets[0].data = [];
-        graf_umidity.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_umidity.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_umidity.data.datasets[0].data.push(dado.val().umidade);         
-        });
-      });
-      graf_umidity.update();
-
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_pluviosity.data.labels = [];
-        graf_pluviosity.data.datasets[0].data = [];
-        graf_pluviosity.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_pluviosity.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_pluviosity.data.datasets[0].data.push(dado.val().pluviosidade);         
-        });
-      });
-      graf_pluviosity.update();
-
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_wind.data.labels = [];
-        graf_wind.data.datasets[0].data = [];
-        graf_wind.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_wind.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_wind.data.datasets[0].data.push(dado.val().vel_do_vento);         
-        });
-      });
-      graf_wind.update();
-
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {
-        graf_battery.data.labels = [];
-        graf_battery.data.datasets[0].data = [];
-        graf_battery.data.datasets[0].label = data.key;
-
-        graph_data.forEach(function (dado) {
-          graf_battery.data.labels.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2));
-          graf_battery.data.datasets[0].data.push(dado.val().bateria);
-        });
-      });
-      graf_battery.update();
-
-    }
-    
     var ctx_temperature, data_temperature, graf_temperature
     var ctx_umidity, data_umidity, graf_umidity
     var ctx_wind, data_wind, graf_wind
@@ -173,17 +95,7 @@
       ctx_fwi = document.getElementById("id_graf_fwi").getContext('2d');
       ctx_battery = document.getElementById("id_graf_battery").getContext('2d');
       ctx_pluviosity = document.getElementById("id_graf_pluviosity").getContext('2d');
-    /*
-      data = {
-          datasets: [{            
-              data: [10],
-              backgroundColor: 'rgba(0, 255, 0, 0.3)',
-              fill: false
-          }],
-          labels: [
-              'Request'
-          ]
-      };*/
+   
       function config_chart(y_string){
         return {
           type: 'line',
