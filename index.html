@@ -26,7 +26,6 @@
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
 
-  
   <script>          
     var color_array = ['rgb(220,35,154,0.8)', 'rgb(239,16,72,0.8)', 'rgb(0,255,154,0.8)',
    'rgb(0,152,255,0.8)', 'rgb(249,255,0,0.8)', 'rgb(136,42,213,0.8)', 'rgb(255,159,0,0.8)']
@@ -209,7 +208,8 @@
 
 <body class="">
     <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-database.js"></script>
   
   <script> // Initialize Firebase   
     var config = {
@@ -229,7 +229,6 @@
       var timeInterval1 = firebase.database().ref("Curupira");
       var valInterval1 = {timeInterval : novo_periodo}
       timeInterval1.update(valInterval1);
-      console.log(novo_periodo);
       document.getElementById("intervalo").value = "";    
     }
 
@@ -244,7 +243,6 @@
         longitude : newLongitude
       }
       newPath.update(valPath);
-      console.log("New Node [" + parseInt(newId, 10) + "] in: " + parseFloat(newLatitude, 10) + " , " + parseFloat(newLongitude, 10));
       document.getElementById("NewNodeId").value = "";
       document.getElementById("latitude").value = "";
       document.getElementById("longitude").value = "";
@@ -256,49 +254,7 @@
     <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
       <div class="container-fluid">
         <div class="navbar-wrapper">
-          <a class="navbar-brand" href="#pablo">Curupira</a>
-        </div>
-        <button id="overlay" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" onclick= 'myFunction()'>
-          <span class="navbar-toggler-bar navbar-kebab"></span>
-          <span class="navbar-toggler-bar navbar-kebab"></span>
-          <span class="navbar-toggler-bar navbar-kebab"></span>
-        </button>
-        <style>
-          #overlay {
-            position: fixed;
-            display: none;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.9);
-            z-index: 2;
-            touch-action: none;
-          }
-        </style>
-        <script>
-          var boolean = 1;
-          function myFunction() {
-            var op = ["none", "block"];
-            document.getElementById("overlay").style.display = op[boolean];
-            if(boolean == 0){
-              boolean = 1;
-            }else{boolean = 0;}
-          }
-        </script>
-        <div class="collapse navbar-collapse justify-content-end" id="navigation">
-          <ul onclick='myFunction()' class="navbar-nav"> 
-            <li class="nav-item">
-              <a class="nav-link btn-rotate" href="#pablo">
-                <i  class="nc-icon nc-settings-gear-65"></i>
-                <p>
-                  <span class="d-lg-none d-md-block">Account</span>
-                </p>
-              </a>
-            </li>
-          </ul>
+          <a class="navbar-brand">Curupira</a>
         </div>
       </div>
     </nav>
@@ -324,12 +280,11 @@
                   
                   var ref_node = firebase.database().ref('Curupira/Nodes');                    
                   ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
-                    console.log("Chave: " + nodes.key);
+                    
                     var ref_node_info = firebase.database().ref('Curupira/Nodes/' + nodes.key);
                     ref_node_info.orderByKey().on('value', function (keys) { // Informações de um nó      
                       
                       if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
-                        console.log("Adicionando marcador em " + keys.val().latitude + " : " + keys.val().longitude);
                         AddMarker(keys);
                         printInfo(keys);
                        // chartUpdate(keys,12);
@@ -353,18 +308,13 @@
                     });
 
                     map.addListener('click', function (local) {
-                    console.log("Cilque no mapa: [" + local.latLng.lat() + "] [ " + local.latLng.lng());
                     document.getElementById("latitude").value = local.latLng.lat();
                     document.getElementById("longitude").value = local.latLng.lng();
 
                   });
                   }
-
-
       
                   function AddMarker (data) {
-                    console.log("Call Addmarker...");                
-
                     var position = { lat: data.val().latitude, lng: data.val().longitude};
                     
                     var marker = new google.maps.Marker({                             
@@ -381,10 +331,8 @@
                     });                      
                   }
 
-
                   function printInfo (data) {
                       if(last_ref){
-                        console.log("retirando evento anterior");
                         last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
                       } 
                       var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
@@ -414,7 +362,6 @@
                           document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Normal battery level" : "Low battery level";
                           var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
                           alteraDiv(valorRisco);
-
                         });
 
                         function alteraFuma (valorFuma) {
