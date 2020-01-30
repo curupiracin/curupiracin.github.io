@@ -155,8 +155,7 @@
                     maxTicksLimit: 5
                 },
                 scaleLabel: {
-                  display: true,
-                  labelString: 'Day'
+                  display: true
                 }
               }]
             },
@@ -198,10 +197,10 @@
       }
       
       graf_temperature = new Chart(ctx_temperature, config_chart('Temperature (ºC)'));
-      graf_umidity = new Chart(ctx_umidity, config_chart('Umidity (%)'));
+      graf_umidity = new Chart(ctx_umidity, config_chart('Humidity (%)'));
       graf_battery = new Chart(ctx_battery, config_chart('Voltage (v)'));
       graf_fwi = new Chart(ctx_fwi, config_chart(''));
-      graf_pluviosity = new Chart(ctx_pluviosity, config_chart('Pluviosity (mm)'));
+      graf_pluviosity = new Chart(ctx_pluviosity, config_chart('Rainfall (mm)'));
       graf_wind = new Chart(ctx_wind, config_chart('Wind Speed (km/h)'));
     });
 
@@ -374,26 +373,6 @@
                         map: map
                     });
 
-                    // var ref_test = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
-                    // ref_test.orderByKey().limitToLast(1).on('value', function (data_test) {
-                    //   data_test.forEach(function (data_test_1) {
-                    //     console.log("Agr vai " + data_test_1.key);
-
-                    //     if (data_test_1.val().fumaca == 1) {
-                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/firedept.png';
-                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/firedept.png');
-                    //     }
-                    //     else if (data_test_1.val().alive == 0) {
-                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/shapes/caution.png';
-                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/shapes/caution.png');
-                    //     }
-                    //     else {
-                    //       //imageIcon = 'http://maps.google.com/mapfiles/kml/paddle/red-circle.png';
-                    //       marker.setIcon('http://maps.google.com/mapfiles/kml/paddle/red-circle.png');
-                    //     }
-                    //   });
-                    // });
-
                     markers[data.key] = marker; // add marker in the markers array... 
                     marker.addListener('click', function () {
                       printInfo(data);
@@ -402,9 +381,6 @@
                     });                      
                   }
 
-
-
-                  
 
                   function printInfo (data) {
                       if(last_ref){
@@ -419,7 +395,7 @@
                           document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
                           document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
                           document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
-                          document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "Com Fumaça":"Sem Fumaça";
+                          document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "With smoke":"Smokeless";
 
                           document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
                           document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
@@ -510,7 +486,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Risco de Incêndio</p>
+                      <p class="card-category">Fire Weather Index</p>
                       <p class="card-title"><p id="risco">NULL
                       </p>
                     </p>
@@ -538,7 +514,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Fumaça</p>
+                      <p class="card-category">Smoke Status</p>
                       <p class="card-title" id = 'fumaca'> NULL <p>
                     </div>
                   </div>
@@ -564,7 +540,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Nó selecionado</p>
+                      <p class="card-category">Selected Node</p>
                       <p class="card-title"><p id="noSelec">NULL
                         <script>
                         </script>
@@ -594,7 +570,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Status do Nó</p>
+                      <p class="card-category">Node Status</p>
                       <p class="card-title"><p id="statusNode">NULL
                         <script>
                         </script>
@@ -624,7 +600,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Nivel de Bateria</p>
+                      <p class="card-category">Battery Level</p>
                       <p class="card-title"><p id="nivelBateria">NULL
                         <script>
                         </script>
@@ -654,7 +630,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Temperatura</p>
+                      <p class="card-category">Temperature</p>
                       <p class="card-title" id = 'Temperatura'> NULL <p>
                     </div>
                   </div>
@@ -680,7 +656,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Umidade</p>
+                      <p class="card-category">Relative Humidity</p>
                       <p class="card-title" id = 'Umidade'> NULL <p>
                     </div>
                   </div>
@@ -706,7 +682,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Velocidade do Vento</p>
+                      <p class="card-category">Wind Speed</p>
                       <p class="card-title" id = 'velocidadeVento'> NULL <p>
                     </div>
                   </div>
@@ -732,7 +708,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Pluviosidade</p>
+                      <p class="card-category">Rainfall</p>
                       <p class="card-title" id = 'pluviosidade'> NULL <p>
                     </div>
                   </div>
@@ -758,15 +734,15 @@
                   </div>
                   <div class="col-7 col-md-10">
                     <div class="numbers">
-                      <p class="card-category">Adicionar Novo Nó</p>  
+                      <p class="card-category">Add New Node</p>  
                     </div>
                    
                     <div class="row" style="padding-right: 15px;">                                 
-                        <input type="text" id = "NewNodeId" class = "form-control col-lg-3 col-6" placeholder="ID"/>
+                        <input type="text" id = "NewNodeId" class = "form-control col-lg-3 col-6" placeholder="Name"/>
                         <input type="text" id = "latitude" class = "form-control col-lg-3 col-6" placeholder="Latitude">
                         <input type="text" id = "longitude" class = "form-control col-lg-3 col-6" placeholder="Longitude">                        
           
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "newNode()" style="margin: 0px; " >Enviar</button>
+                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "newNode()" style="margin: 0px; " >Add</button>
                     </div>
                   </div>
                 </div>
@@ -802,10 +778,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12,'fwi')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*7,'fwi')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*30,'fwi')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*365,'fwi')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12,'fwi')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*7,'fwi')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*30,'fwi')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*365,'fwi')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -832,10 +808,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12,'temperatura')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*7,'temperatura')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*30,'temperatura')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*365,'temperatura')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12,'temperatura')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*7,'temperatura')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*30,'temperatura')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*365,'temperatura')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -849,7 +825,7 @@
               <div class="card-header ">
                 <div class="row">
                   <div class="col-12">
-                    Umidity
+                    Relative Humidity
                   </div>
                 </div>
               </div>
@@ -862,10 +838,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12,'umidade')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*7,'umidade')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*30,'umidade')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*365,'umidade')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12,'umidade')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*7,'umidade')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*30,'umidade')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*365,'umidade')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -892,10 +868,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12,'bateria')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*7,'bateria')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*30,'bateria')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*365,'bateria')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12,'bateria')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*7,'bateria')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*30,'bateria')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*365,'bateria')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -909,7 +885,7 @@
               <div class="card-header ">
                 <div class="row">
                   <div class="col-12">
-                    Pluviosity
+                    Rainfall
                   </div>
                 </div>
               </div>
@@ -922,10 +898,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12,'pluviosidade')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*7,'pluviosidade')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*30,'pluviosidade')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*365,'pluviosidade')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12,'pluviosidade')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*7,'pluviosidade')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*30,'pluviosidade')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*365,'pluviosidade')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -952,10 +928,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12,'vel_do_vento')">1 Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*7,'vel_do_vento')">1 Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*30,'vel_do_vento')">1 Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*365,'vel_do_vento')">1 Year</button>   
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12,'vel_do_vento')">Day</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*7,'vel_do_vento')">Week</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*30,'vel_do_vento')">Month</button> 
+                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*365,'vel_do_vento')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
