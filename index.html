@@ -411,7 +411,7 @@
                             document.getElementById("statusNode").style.color = 'red';
                           }
                           document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
-                          document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Carga da bateria normal" : "Carga da bateria baixa";
+                          document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Normal battery level" : "Low battery level";
                           var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
                           alteraDiv(valorRisco);
 
@@ -429,32 +429,32 @@
                         function alteraDiv (valorRisco) {
                           if (valorRisco < 8) {
                             document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Baixo";
+                            document.getElementById("fraseRisco").innerHTML = "Low Risk";
                             document.getElementById("fraseRisco").style.color = 'black';
                           }
                           else if (valorRisco < 16) {
                             document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Moderado";
+                            document.getElementById("fraseRisco").innerHTML = "Moderate Risk";
                             document.getElementById("fraseRisco").style.color = 'black';
                           }
                           else if (valorRisco < 24) {
                             document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!";
+                            document.getElementById("fraseRisco").innerHTML = "High risk, attention!";
                             document.getElementById("fraseRisco").style.color = 'black';
                           }
                           else if (valorRisco < 33) {
                             document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Alto, atenção!!!";
+                            document.getElementById("fraseRisco").innerHTML = "High risk, attention!!!";
                             document.getElementById("fraseRisco").style.color = 'white';
                           }
                           else if (valorRisco < 41) {
                             document.getElementById('testeBack').style.backgroundColor = '#D10111';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                            document.getElementById("fraseRisco").innerHTML = "Very high risk, check the area!";
                             document.getElementById("fraseRisco").style.color = 'white';
                           }
                           else {
                             document.getElementById('testeBack').style.backgroundColor = '#AE000A';
-                            document.getElementById("fraseRisco").innerHTML = "Risco Muito Alto, Verifique a área!";
+                            document.getElementById("fraseRisco").innerHTML = "Very high risk, check the area!!!";
                             document.getElementById("fraseRisco").style.color = 'white';
                           }
                         }                         
@@ -487,8 +487,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Fire Weather Index</p>
-                      <p class="card-title"><p id="risco">NULL
-                      </p>
+                      <p class="card-title"><p id="risco"></p>
                     </p>
                     </div>
                   </div>
@@ -497,7 +496,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> <span id = "fraseRisco"> NULL </span>
+                  <i class="fa fa-refresh"></i> <span id = "fraseRisco"></span>
                 </div>
               </div>
             </div>
@@ -515,7 +514,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Smoke Status</p>
-                      <p class="card-title" id = 'fumaca'> NULL <p>
+                      <p class="card-title" id = 'fumaca'><p>
                     </div>
                   </div>
                 </div>
@@ -541,11 +540,9 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Selected Node</p>
-                      <p class="card-title"><p id="noSelec">NULL
-                        <script>
-                        </script>
+                      <p class="card-title">
+                        <p id="noSelec"></p>
                       </p>
-                    </p>
                     </div>
                   </div>
                 </div>
@@ -553,7 +550,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Ultima atualização em <span id="ultima_att_data"> __/__ </span> às <span id="ultima_att_hora"> -- : -- </span>
+                  <i class="fa fa-refresh"></i> Last updated on <span id="ultima_att_data"> __/__ </span> at <span id="ultima_att_hora"> -- : -- </span>
                 </div>
               </div>
             </div>
@@ -571,11 +568,9 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Node Status</p>
-                      <p class="card-title"><p id="statusNode">NULL
-                        <script>
-                        </script>
+                      <p class="card-title">
+                        <p id="statusNode"></p>
                       </p>
-                    </p>
                     </div>
                   </div>
                 </div>
@@ -601,11 +596,9 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Battery Level</p>
-                      <p class="card-title"><p id="nivelBateria">NULL
-                        <script>
-                        </script>
+                      <p class="card-title">
+                        <p id="nivelBateria"></p>
                       </p>
-                    </p>
                     </div>
                   </div>
                 </div>
@@ -631,7 +624,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Temperature</p>
-                      <p class="card-title" id = 'Temperatura'> NULL <p>
+                      <p class="card-title" id = 'Temperatura'><p>
                     </div>
                   </div>
                 </div>
@@ -657,7 +650,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Relative Humidity</p>
-                      <p class="card-title" id = 'Umidade'> NULL <p>
+                      <p class="card-title" id = 'Umidade'><p>
                     </div>
                   </div>
                 </div>
@@ -683,7 +676,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Wind Speed</p>
-                      <p class="card-title" id = 'velocidadeVento'> NULL <p>
+                      <p class="card-title" id = 'velocidadeVento'><p>
                     </div>
                   </div>
                 </div>
@@ -709,7 +702,7 @@
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Rainfall</p>
-                      <p class="card-title" id = 'pluviosidade'> NULL <p>
+                      <p class="card-title" id = 'pluviosidade'><p>
                     </div>
                   </div>
                 </div>
