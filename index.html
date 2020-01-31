@@ -72,8 +72,7 @@
           labels_fb.push(("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2))
         });        
       });
-      var data = new Date();
-      //Pegar a data, para casar com os valores
+     
       switch(qtdData){
         case 'day' :          
           labels_fb = ['00:00', '08:00', '16:00', '23:59']
@@ -85,13 +84,13 @@
           labels_fb = ['', '20', '30']
       }
       
-
       var labels = []
 
       for(var k = 0 ; k < graf_temperature.data.datasets.length ; k++)
         labels.push(graf_temperature.data.datasets[k].label)      
-
+      
       if(labels.indexOf(data.key) == -1){
+        
         newColor = color_array[label_fb[label_fb.length-1] % color_array.length];
         addData(graf_temperature, label_fb, newColor, temperature_fb, labels_fb)
         addData(graf_umidity, label_fb, newColor, umidity_fb, labels_fb)
