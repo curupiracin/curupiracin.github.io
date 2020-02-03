@@ -369,42 +369,56 @@
                         function alteraFuma (valorFuma) {
                           if (valorFuma == 1) {
                               document.getElementById('fumaBack').style.backgroundColor = 'red';
+                              document.getElementById("tituloFumaca").style.color = 'white';
                           }
                           else {
                               document.getElementById('fumaBack').style.backgroundColor = '#E6E6E6';
+                              document.getElementById("tituloFumaca").style.color = 'black';
                           }
                         }
 
                         function alteraDiv (valorRisco) {
-                          if (valorRisco < 8) {
+                          if (valorRisco < 0) {
+                            document.getElementById('testeBack').style.backgroundColor = 'red';
+                            document.getElementById("fraseRisco").innerHTML = "Node problem, FWI not calculated";
+                            document.getElementById("fraseRisco").style.color = 'white';
+                            document.getElementById("tituloRisco").style.color = 'white';
+                          }
+                          else if (valorRisco < 8) {
                             document.getElementById('testeBack').style.backgroundColor = '#8CFE84';
                             document.getElementById("fraseRisco").innerHTML = "Low Risk";
                             document.getElementById("fraseRisco").style.color = 'black';
+                            document.getElementById("tituloRisco").style.color = 'black';
                           }
                           else if (valorRisco < 16) {
                             document.getElementById('testeBack').style.backgroundColor = '#FBFF4A';
                             document.getElementById("fraseRisco").innerHTML = "Moderate Risk";
                             document.getElementById("fraseRisco").style.color = 'black';
+                            document.getElementById("tituloRisco").style.color = 'black';
                           }
                           else if (valorRisco < 24) {
                             document.getElementById('testeBack').style.backgroundColor = '#F8B01E';
                             document.getElementById("fraseRisco").innerHTML = "High risk, attention!";
                             document.getElementById("fraseRisco").style.color = 'black';
+                            document.getElementById("tituloRisco").style.color = 'black';
                           }
                           else if (valorRisco < 33) {
                             document.getElementById('testeBack').style.backgroundColor = '#F24A1B';
                             document.getElementById("fraseRisco").innerHTML = "High risk, attention!!!";
                             document.getElementById("fraseRisco").style.color = 'white';
+                            document.getElementById("tituloRisco").style.color = 'white';
                           }
                           else if (valorRisco < 41) {
                             document.getElementById('testeBack').style.backgroundColor = '#D10111';
                             document.getElementById("fraseRisco").innerHTML = "Very high risk, check the area!";
                             document.getElementById("fraseRisco").style.color = 'white';
+                            document.getElementById("tituloRisco").style.color = 'white';
                           }
                           else {
                             document.getElementById('testeBack').style.backgroundColor = '#AE000A';
                             document.getElementById("fraseRisco").innerHTML = "Very high risk, check the area!!!";
                             document.getElementById("fraseRisco").style.color = 'white';
+                            document.getElementById("tituloRisco").style.color = 'white';
                           }
                         }                         
                       }
@@ -417,6 +431,7 @@
                     var doc = new jsPDF()
                     doc.setFontSize(8)
                     console.log("Fazendo Requisições...");
+                    document.getElementById("sttsTabela").innerHTML = "Wait a moment";
 
                     var ref_node = firebase.database().ref('Curupira/Nodes');                    
                     ref_node.orderByKey().on('value', function (nodes) { // Lista de nós      
@@ -506,6 +521,7 @@
                             title: 'Report Curupira',
                             subject: 'Report'
                         });
+                        document.getElementById("sttsTabela").innerHTML = "Ready, starting download";
                         doc.save('Report.pdf');                
                         console.log("Terminaram as tabelas. Salvando"); 
                     });          
@@ -534,7 +550,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Fire Weather Index</p>
+                      <p class="card-category" id ="tituloRisco">Fire Weather Index</p>
                       <p class="card-title"><p id="risco"></p>
                     </p>
                     </div>
@@ -561,7 +577,7 @@
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Smoke Status</p>
+                      <p class="card-category" id="tituloFumaca">Smoke Status</p>
                       <p class="card-title" id = 'fumaca'><p>
                     </div>
                   </div>
@@ -817,7 +833,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i></i>
+                  <i class="fa fa-refresh"></i> Status: <span id="sttsTabela">Choose a period</span>
                 </div>
               </div>
             </div>
