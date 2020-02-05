@@ -427,11 +427,14 @@
                   }
 
                   function exportFirebase(num) {
+
+                    var data = new Date();
+                    document.getElementById("sttsTabela").innerHTML = "Wait a moment";
+                    console.log("Fazendo Requisições...");
+
                     var valueY = 0;
                     var doc = new jsPDF()
                     doc.setFontSize(8)
-                    console.log("Fazendo Requisições...");
-                    document.getElementById("sttsTabela").innerHTML = "Wait a moment";
 
                     var ref_node = firebase.database().ref('Curupira/Nodes');                    
                     ref_node.orderByKey().on('value', function (nodes) { // Lista de nós      
@@ -468,7 +471,7 @@
                                     });                      
                                 });                     
                                 
-                                var cabecalho = [["ID","Day","Month","Hour","Minute","Second","Alive","Battery","Smoke","FWI","Rainfall","Temperature","Humidity","Wind Speed"]];
+                                var cabecalho = [["Index","Day","Month","Hour","Minute","Second","Alive","Battery","Smoke","FWI","Rainfall","Temperature","Humidity","Wind Speed"]];
                                 var titulo = [["Node", "Latitude", "Longitude"]];
                             
                                 // if(valueY == 0) // Primeiro dado
@@ -480,7 +483,7 @@
 
                                 doc.setFontSize(12)
                                 doc.setFontStyle('bold')
-                                doc.text('Data: ' + tituloData[0][0], 14, valueY+10);
+                                doc.text('Report of: ' + tituloData[0][0] + ' in: ' + data.toLocaleString(), 14, valueY+10);
                                 
                                 doc.autoTable({
                                     headStyles: { 
@@ -513,7 +516,6 @@
                                 })
 
                                 valueY = doc.previousAutoTable.finalY + 20;
-
                                 console.log("Terminou a tabela de 1 nó");
                             }); 
                         });
@@ -522,7 +524,7 @@
                             subject: 'Report'
                         });
                         document.getElementById("sttsTabela").innerHTML = "Ready, starting download";
-                        doc.save('Report.pdf');                
+                        doc.save('Report.pdf');
                         console.log("Terminaram as tabelas. Salvando"); 
                     });          
                   }
@@ -821,11 +823,11 @@
                     <div class="numbers">
                       <p class="card-category">Report</p>  
                     </div>
-                    <div class="row" style="padding-right: 15px;padding-left: 15px;">                                 
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "exportFirebase(12)" style="margin: 0px; " >Day</button>
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "exportFirebase(12*7)" style="margin: 0px; " >Week</button>
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "exportFirebase(12*30)" style="margin: 0px; " >Month</button>
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "exportFirebase(12*365)" style="margin: 0px; " >Year</button>
+                    <div class="row" style="padding-right: 15px; padding-left: 15px; text-align: center;">                                 
+                        <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12)" style="margin: 2px 2px; " >Day</button>
+                        <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12*7)" style="margin: 2px 2px; " >Week</button>
+                        <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12*30)" style="margin: 2px 2px; " >Month</button>
+                        <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12*365)" style="margin: 2px 2px; " >Year</button>
                     </div>
                   </div>
                 </div>
