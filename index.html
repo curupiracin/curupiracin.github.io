@@ -796,12 +796,12 @@
                       <p class="card-category">Add New Node</p>  
                     </div>
                    
-                    <div class="row" style="padding-right: 15px;">                                 
-                        <input type="text" id = "NewNodeId" class = "form-control col-lg-3 col-6" placeholder="Name"/>
-                        <input type="text" id = "latitude" class = "form-control col-lg-3 col-6" placeholder="Latitude">
-                        <input type="text" id = "longitude" class = "form-control col-lg-3 col-6" placeholder="Longitude">                        
+                    <div class="row" style="padding-right: 15px;padding-left: 15px;">                                 
+                        <input type="text" id = "NewNodeId" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Name"/>
+                        <input type="text" id = "latitude" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Latitude">
+                        <input type="text" id = "longitude" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Longitude">                        
           
-                        <button type = "submit" class = "btn btn-primary col-lg-3 col-6"  onclick = "newNode()" style="margin: 0px; " >Add</button>
+                        <button type = "submit" class = "btn btn-primary col-lg-2 col-md-4"  style="margin: 2px 2px; " onclick = "newNode()" style="margin: 0px; " >Add</button>
                     </div>
                   </div>
                 </div>
@@ -862,11 +862,11 @@
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12,'fwi')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*7,'fwi')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*30,'fwi')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_fwi, 12*365,'fwi')">Year</button>   
+                <div class="row" style="padding: 0px 15px">
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12,'fwi')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12*7,'fwi')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12*30,'fwi')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12*365,'fwi')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -892,11 +892,11 @@
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12,'temperatura')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*7,'temperatura')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*30,'temperatura')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_temperature, 12*365,'temperatura')">Year</button>   
+                <div class="row" style="padding: 0px 15px">
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_temperature, 12,'temperatura')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_temperature, 12*7,'temperatura')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_temperature, 12*30,'temperatura')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_temperature, 12*365,'temperatura')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -922,11 +922,11 @@
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12,'umidade')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*7,'umidade')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*30,'umidade')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_umidity, 12*365,'umidade')">Year</button>   
+                <div class="row" style="padding: 0px 15px">
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_umidity, 12,'umidade')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_umidity, 12*7,'umidade')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_umidity, 12*30,'umidade')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_umidity, 12*365,'umidade')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -952,11 +952,11 @@
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12,'bateria')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*7,'bateria')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*30,'bateria')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_battery, 12*365,'bateria')">Year</button>   
+                <div class="row" style="padding: 0px 15px">
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_battery, 12,'bateria')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_battery, 12*7,'bateria')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_battery, 12*30,'bateria')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_battery, 12*365,'bateria')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -975,7 +975,7 @@
                 </div>
               </div>
               <div class="card-body ">
-                <div class="row">
+                <div class="row" style="padding: 0px 15px">
                   <div class="col-12">
                     <canvas id="id_graf_pluviosity" style="min-height: 250px; min-width: auto;"></canvas>
                   </div>
@@ -983,10 +983,10 @@
               </div>
               <div class="card-footer ">
                 <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12,'pluviosidade')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*7,'pluviosidade')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*30,'pluviosidade')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_pluviosity, 12*365,'pluviosidade')">Year</button>   
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12,'pluviosidade')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12*7,'pluviosidade')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12*30,'pluviosidade')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12*365,'pluviosidade')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
@@ -1012,11 +1012,11 @@
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12,'vel_do_vento')">Day</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*7,'vel_do_vento')">Week</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*30,'vel_do_vento')">Month</button> 
-                  <button class="btn btn-outline-primary col-3" onclick="chartUpdateSize(graf_wind, 12*365,'vel_do_vento')">Year</button>   
+                <div class="row" style="padding: 0px 15px">
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_wind, 12,'vel_do_vento')">Day</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_wind, 12*7,'vel_do_vento')">Week</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_wind, 12*30,'vel_do_vento')">Month</button> 
+                  <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_wind, 12*365,'vel_do_vento')">Year</button>   
                 </div>
                 <div class="stats">
                   <i></i>
