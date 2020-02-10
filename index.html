@@ -279,6 +279,7 @@
                   var map;
                   var last_ref;
                   var nodeGlobal;
+                  var click = false; // Saber se o usuário já clicou no mapa
                   
                   var ref_node = firebase.database().ref('Curupira/Nodes');                    
                   ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
@@ -288,8 +289,10 @@
                       
                       if(keys.val().latitude && keys.val().longitude){ // Adicionando marcador ao mapa
                         AddMarker(keys);
-                        printInfo(keys);
-                       // chartUpdate(keys,12);
+                        if (click == false) {
+                          printInfo(keys);
+                        }
+                        // chartUpdate(keys,12);
                         nodeGlobal = keys;                       
                       }    
                     });                      
@@ -305,7 +308,7 @@
                         stylers: [{
                             visibility: "off" 
                         }]}],
-                      center: new google.maps.LatLng(-5.832281, -35.205511),
+                      center: new google.maps.LatLng(-8.055667, -34.951369),
                       mapTypeId: 'roadmap'
                     });
 
@@ -327,6 +330,7 @@
 
                     markers[data.key] = marker; // add marker in the markers array... 
                     marker.addListener('click', function () {
+                      click = true;
                       printInfo(data);
                       chartUpdate(data, 12);
                       nodeGlobal = data;
@@ -975,14 +979,14 @@
                 </div>
               </div>
               <div class="card-body ">
-                <div class="row" style="padding: 0px 15px">
+                <div class="row">
                   <div class="col-12">
                     <canvas id="id_graf_pluviosity" style="min-height: 250px; min-width: auto;"></canvas>
                   </div>
                 </div>
               </div>
               <div class="card-footer ">
-                <div class="row">
+                <div class="row" style="padding: 0px 15px">
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12,'pluviosidade')">Day</button> 
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12*7,'pluviosidade')">Week</button> 
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_pluviosity, 12*30,'pluviosidade')">Month</button> 
