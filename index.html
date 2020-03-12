@@ -284,6 +284,7 @@
                   var click = false; // Saber se o usuário já clicou no mapa
                   var ws_data = [[]];
                   var quebraDelinha = [" "];
+                  var wb = XLSX.utils.book_new();
                   
                   var ref_node = firebase.database().ref('Curupira/Nodes');                    
                   ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
@@ -489,108 +490,22 @@
                                 });
 
                                 info.reverse();
-                            
-                                // if(valueY == 0) // Primeiro dado
-                                //     valueY = 20;            
-                                // else
-                                //     valueY = doc.autoTable.previous.finalY+20;
 
-                                // doc.text('Data: ' + tituloData[0][0], 14, valueY+10);
-
-                                /*
-
-                                doc.setFontSize(12)
-                                doc.setFontStyle('bold')
-                                doc.text('Report of: ' + tituloData[0][0] + ' in: ' + data.toLocaleString(), 14, valueY+10);
-                                
-                                doc.autoTable({
-                                    headStyles: { 
-                                        fillColor: [230, 230, 230],
-                                        textColor: 0,
-                                    },
-                                    styles: { 
-                                        halign: 'center',
-                                    },
-                                    startY: valueY + 20,
-                                    head: titulo,
-                                    body: tituloData,
-                                })
-
-                                valueY = doc.previousAutoTable.finalY - 10;
-
-                                doc.autoTable({
-                                    headStyles: {
-                                        fillColor: [230, 230, 230],
-                                        textColor: 0,
-                                    },
-                                    styles: { 
-                                        fontSize: number = 8,
-                                        halign: 'center', 
-                                    },
-                                    head: cabecalho,
-                                    body: info,
-                                    startY: valueY + 20,
-                                    theme: 'grid',
-                                })
-
-                                valueY = doc.previousAutoTable.finalY + 20;
-
-                                */
+                                wb.SheetNames.push(tituloData[0][0]);
+                                var ws = XLSX.utils.aoa_to_sheet(ws_data);
+                                wb.Sheets[tituloData[0][0]] = ws;
                                 
                                 console.log("Terminou a tabela de 1 nó");
-
-                                ws_data.push(quebraDelinha);
+                                ws_data = [[]];
                             }); 
                         });
-                        // doc.setProperties({
-                        //     title: 'Report Curupira',
-                        //     subject: 'Report'
-                        // });
                         document.getElementById("sttsTabela").innerHTML = "Ready, starting download";
-                        //doc.save('Report.pdf');
-                        exportXLSX();
+
+                        console.log("Exportando xlsx");
+                        XLSX.writeFile(wb, 'Curupira_Report.xlsx');
+                        
                         console.log("Terminaram as tabelas. Salvando");
                     });          
-                  }
-
-                  function exportXLSX () {
-                    console.log("Exportando xlsx");
-
-                    var wb = XLSX.utils.book_new();
-                    // wb.Props = {
-                    //         Title: "Testando planilha",
-                    //         Subject: "Test",
-                    //         Author: "Gabriel",
-                    //         CreatedDate: new Date(2020,3,12)
-                    // };
-                    wb.SheetNames.push("Folha de teste");
-                    //var ws_data = [['hello' , 'world']];
-                    var ws = XLSX.utils.aoa_to_sheet(ws_data);
-                    wb.Sheets["Folha de teste"] = ws;
-                    XLSX.writeFile(wb, 'Curupira_Report.xlsx');
-                    // var wb = XLSX.utils.book_new();
-                    // wb.Props = {
-                    //         Title: "Testando planilha",
-                    //         Subject: "Test",
-                    //         Author: "Gabriel",
-                    //         CreatedDate: new Date(2020,3,12)
-                    // };
-                    
-                    // wb.SheetNames.push("Folha de teste");
-                    // //var ws_data = [['hello' , 'world']];
-                    // var ws = XLSX.utils.aoa_to_sheet(ws_data);
-                    // wb.Sheets["Folha de teste"] = ws;
-                    // var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'xlsx'});
-                    // function s2ab(s) {
-              
-                    //         var buf = new ArrayBuffer(s.length);
-                    //         var view = new Uint8Array(buf);
-                    //         for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-                    //         return buf;
-                            
-                    // }
-                    // XLSX.writeFile(wb, 'SheetJSTableExport.xlsx');
-                    //saveAs(new Blob([s2ab(wbout)],{type:"text/plain;charset=utf-8"}), "test.xlsx");
                   }
 
                 </script>
