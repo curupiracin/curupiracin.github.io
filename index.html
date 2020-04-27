@@ -355,6 +355,7 @@
                           document.getElementById("risco").innerHTML = dado.val().fwi.toString().substr(0, 5);        
                           document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
                           document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "With smoke":"Smokeless";
+                          document.getElementById("direcaoVento").innerHTML = dado.val().vento.toString();
 
                           document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
                           document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
@@ -761,7 +762,33 @@
             </div>
           </div>
 
-          <div class="col-lg-6 col-md-6 col-sm-6">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i><img width="42px" height="42px" src="assets/img/compass.png"/></i>
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                    <div class="numbers">
+                      <p class="card-category">Wind direction</p>
+                      <p class="card-title" id = 'direcaoVento'><p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
@@ -775,12 +802,11 @@
                       <p class="card-category">Add New Node</p>  
                     </div>
                    
-                    <div class="row" style="padding-right: 15px;padding-left: 15px;">                                 
-                        <input type="text" id = "NewNodeId" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Name"/>
-                        <input type="text" id = "latitude" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Latitude">
-                        <input type="text" id = "longitude" class = "form-control col-lg-3 col-md-4" style="margin: 2px 2px; " placeholder="Longitude">                        
-          
-                        <button type = "submit" class = "btn btn-primary col-lg-2 col-md-4"  style="margin: 2px 2px; " onclick = "newNode()" style="margin: 0px; " >Add</button>
+                    <div class="row" style="padding-right: 15px;padding-left: 15px; text-align: center;">                                 
+                        <input type="text" id = "NewNodeId" class = "form-control col" style="margin: 2px 2px; " placeholder="Name"/>
+                        <input type="text" id = "latitude" class = "form-control col" style="margin: 2px 2px; " placeholder="Latitude">
+                        <input type="text" id = "longitude" class = "form-control col" style="margin: 2px 2px; " placeholder="Longitude">                        
+                        <button type = "submit" class = "btn btn-primary col"  style="margin: 2px 2px; " onclick = "newNode()">Add</button>
                     </div>
                   </div>
                 </div>
