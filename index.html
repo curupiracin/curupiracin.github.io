@@ -59,7 +59,7 @@
       var labels_fb = []
       var label_fb
       var newColor
-      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
+      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/fwi');
       ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {   
         graph_data.forEach(function (dado) {         
           temperature_fb.push(dado.val().temperatura)
@@ -115,7 +115,7 @@
       for(var k = 0; k < label_resize.length; k++){
         info_fb = []
         labels_fb = []
-        ref_graph = firebase.database().ref('Curupira/Nodes/' + label_resize[k] + '/sensoriamento');
+        ref_graph = firebase.database().ref('Curupira/Nodes/' + label_resize[k] + '/fwi');
         ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {   
           graph_data.forEach(function (dado) {              
             info_fb.push(dado.val()[info_type])
@@ -454,7 +454,7 @@
                             ref_node_info.orderByKey().on('value', function (keys) { // Informações de um nó
                                 var info = [];
                                 var tituloData = [[]];
-                                var cabecalho = [["Index","Day","Month","Hour","Minute","Second","Alive","Smoke","Battery","FWI","Rainfall","Temperature","Humidity","Wind Speed"]];
+                                var cabecalho = [["Index","Day","Month","Hour","Minute","Second","Alive","Smoke","Battery","FWI","Rainfall","Temperature","Humidity","Wind Speed", "Wind Direction"]];
                                 var titulo = [["Node", "Latitude", "Longitude"]];
 
                                 tituloData[0][0] = keys.key;
@@ -466,7 +466,7 @@
                                 ws_data.push(quebraDelinha);
                                 ws_data.push(cabecalho[0]);
                                 
-                                var ref_data = firebase.database().ref('Curupira/Nodes/' + keys.key + '/sensoriamento');
+                                var ref_data = firebase.database().ref('Curupira/Nodes/' + keys.key + '/fwi');
                                 ref_data.orderByKey().limitToLast(num).on('value', function (data) { //Requisita os 'num' ultimos sensoriamentos de um nó
                                     var count = 0;
                                     data.forEach(function (dado) {
@@ -484,7 +484,8 @@
                                         senso.push(dado.val().pluviosidade);
                                         senso.push(dado.val().temperatura);
                                         senso.push(dado.val().umidade);
-                                        senso.push(dado.val().vel_do_vento); 
+                                        senso.push(dado.val().vel_do_vento);
+                                        senso.push(dado.val().vento);
                                         info.push(senso);
                                         ws_data.push(senso);
                                     });                      
