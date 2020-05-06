@@ -356,6 +356,7 @@
                           document.getElementById("pluviosidade").innerHTML = dado.val().pluviosidade.toString().substr(0, 5) + "mm";
                           document.getElementById("fumaca").innerHTML = dado.val().fumaca == 1 ? "With smoke":"Smokeless";
                           document.getElementById("direcaoVento").innerHTML = dado.val().vento.toString();
+                          document.getElementById("sttsFuncionamento").innerHTML = dado.val().status.toString();
 
                           document.getElementById("ultima_att_hora").innerHTML = ("00" + dado.val().hora.toString()).slice(-2) + " : " + ("00" + dado.val().minuto.toString()).slice(-2);
                           document.getElementById("ultima_att_data").innerHTML = ("00" + dado.val().dia.toString()).slice(-2) + "/" + ("00" + dado.val().mes.toString()).slice(-2);
@@ -543,7 +544,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> <span id = "fraseRisco"></span>
+                  <i class="fa fa-fire"></i> <span id = "fraseRisco"></span>
                 </div>
               </div>
             </div>
@@ -625,7 +626,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i></i>
+                  <i class="fa fa-info-circle"></i> Status: <span id ="sttsFuncionamento">Awaiting Status</span>
                 </div>
               </div>
             </div>
@@ -653,7 +654,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i></i> <span id="msgBateria"> </span>
+                  <i class="fa fa-bolt"></i> <span id="msgBateria"> </span>
                 </div>
               </div>
             </div>
@@ -841,7 +842,7 @@
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Status: <span id="sttsTabela">Choose a period</span>
+                  <i class="fa fa-file-text-o"></i> Status: <span id="sttsTabela">Choose a period</span>
                 </div>
               </div>
             </div>
