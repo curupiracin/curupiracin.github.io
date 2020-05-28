@@ -59,9 +59,9 @@
       var labels_fb = []
       var label_fb
       var newColor
-      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/fwi');
-      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {   
-        graph_data.forEach(function (dado) {         
+      ref_graph = firebase.database().ref('Curupira/Nodes/' + data.key + '/fwi'); // Setando o caminho de busca no firebase
+      ref_graph.orderByKey().limitToLast(qtdData).on('value', function (graph_data) {   // Ordenando de acordo com a chave para mostramos o valor de acordo com a ordem de chegada
+        graph_data.forEach(function (dado) {  // Para cada linha da requisição é feito um push no da estrutura no vetor do gŕafico
           temperature_fb.push(dado.val().temperatura)
           umidity_fb.push(dado.val().umidade)   
           fwi_fb.push(dado.val().fwi)
@@ -73,7 +73,7 @@
         });        
       });
      
-      switch(qtdData){
+      switch(qtdData){  // Função usada para alterar as labels de visualização de acordo com o periodo de solicitado
         case 'day' :          
           labels_fb = ['00:00', '08:00', '16:00', '23:59']
         case 'week' :
@@ -101,7 +101,8 @@
       }
 			
     }
-  
+    
+    // Fazendo o update das informações
     function chartUpdateSize(chart, qtdData, info_type){
       var label_resize = []
       var info_fb = []
@@ -127,7 +128,7 @@
       }
     }  
     
-    //tenho que iniciar essa função
+    // Cinfuguração inicial dos gráficos
     $(function () {
       ctx_temperature = document.getElementById("id_graf_temperature").getContext('2d');
       ctx_umidity = document.getElementById("id_graf_umidity").getContext('2d');
@@ -227,7 +228,8 @@
     };
               
     firebase.initializeApp(config);    
-  
+
+    // função não usada
     function envia_firebase(){
       var novo_periodo = parseInt(document.getElementById("intervalo").value.toString(), 10);
       var timeInterval1 = firebase.database().ref("Curupira");
@@ -236,17 +238,22 @@
       document.getElementById("intervalo").value = "";    
     }
 
+    // Função para adicionar novo nó e enviar para o banco de dados
     function newNode () {
+      // inicialmente fazemos a conversão dos tipos strings para float e int
       var newId = parseInt(document.getElementById("NewNodeId").value.toString(), 10);
       var newLatitude = parseFloat(document.getElementById("latitude").value.toString(), 10);
       var newLongitude = parseFloat(document.getElementById("longitude").value.toString(), 10);
-      var newPath = firebase.database().ref("Curupira/Nodes/node-" + newId);
+      var newPath = firebase.database().ref("Curupira/Nodes/node-" + newId); // Criando um path para o novo nó
+      // Criando um objeto com os valores juntos
       var valPath = {
         id : newId,
         latitude : newLatitude,
         longitude : newLongitude
       }
-      newPath.update(valPath);
+      newPath.update(valPath); // Enviando um update com o novo valor do nó para o novo path
+
+      // limpando os campos de adição no site
       document.getElementById("NewNodeId").value = "";
       document.getElementById("latitude").value = "";
       document.getElementById("longitude").value = "";
@@ -276,7 +283,8 @@
                   </row>
                 </col> 
                 <script> 
-                  // markers array to store all the markers, so that we could remove marker when any car goes offline and its data will be remove from realtime database...
+
+                  // Basicamente são variáveis de estados ou de inicialização
                   var markers = [];
                   var map;
                   var last_ref;
@@ -284,7 +292,7 @@
                   var click = false; // Saber se o usuário já clicou no mapa
                   var ws_data = [[]];
                   var quebraDelinha = [" "];
-                  var wb = XLSX.utils.book_new();
+                  var wb = XLSX.utils.book_new(); // Declaração do arquivo xlsx
                   
                   var ref_node = firebase.database().ref('Curupira/Nodes');                    
                   ref_node.orderByKey().on('child_added', function (nodes) { // Lista de nós                                        
@@ -317,14 +325,14 @@
                       mapTypeId: 'roadmap'
                     });
 
-                    map.addListener('click', function (local) {
+                    map.addListener('click', function (local) { // Obter informações de latitude e logintude ao clicar no mapa, e colocar nos campos
                     document.getElementById("latitude").value = local.latLng.lat();
                     document.getElementById("longitude").value = local.latLng.lng();
 
                   });
                   }
       
-                  function AddMarker (data) {
+                  function AddMarker (data) { // Adição de um novo nó
                     var position = { lat: data.val().latitude, lng: data.val().longitude};
                     
                     var marker = new google.maps.Marker({                             
@@ -334,7 +342,7 @@
                     });
 
                     markers[data.key] = marker; // add marker in the markers array... 
-                    marker.addListener('click', function () {
+                    marker.addListener('click', function () { // Listener para cada nó clicado ser adicionados aos gráficos e alterar as informações
                       click = true;
                       printInfo(data);
                       chartUpdate(data, 12);
@@ -343,12 +351,13 @@
                   }
 
                   function printInfo (data) {
-                      if(last_ref){
+                      if(last_ref){ // função para verificar caso seja o primeio dado e não teria um anterior
                         last_ref.orderByKey().limitToLast(1).off('value', func_att_data);                  
                       } 
                       var ref_node_sensor = firebase.database().ref('Curupira/Nodes/' + data.key + '/sensoriamento');
                       var func_att_data = function (sensores) {  //Sensoriamento 
-                        sensores.forEach(function(dado) {                      
+                        sensores.forEach(function(dado) {
+                          // Aqui é só atualização das tags html     
                           document.getElementById("Temperatura").innerHTML = dado.val().temperatura.toString().substr(0, 5) + "°C";
                           document.getElementById("Umidade").innerHTML = dado.val().umidade.toString().substr(0, 5) + "%";
                           document.getElementById("velocidadeVento").innerHTML = dado.val().vel_do_vento.toString().substr(0, 5) + "Km/h";
@@ -365,19 +374,21 @@
                           document.getElementById("statusNode").innerHTML = dado.val().alive == 1 ? "ONLINE" : "OFFLINE";
                           var valorFuma = parseInt(dado.val().fumaca, 10);
                           alteraFuma(valorFuma);
+
                           if (dado.val().alive == 1) {
                             document.getElementById("statusNode").style.color = 'green';
                           }
                           else {
                             document.getElementById("statusNode").style.color = 'red';
                           }
+
                           document.getElementById("nivelBateria").innerHTML = dado.val().bateria.toString() + " v";
                           document.getElementById("msgBateria").innerHTML = parseFloat(dado.val().bateria.toString(), 10) > 3.5 ? "Normal battery level" : "Low battery level";
                           var valorRisco = parseFloat(dado.val().fwi.toString().substr(0, 5), 10);
                           alteraDiv(valorRisco);
                         });
 
-                        function alteraFuma (valorFuma) {
+                        function alteraFuma (valorFuma) { // Alterar o valor do background em caso de fumaça
                           if (valorFuma == 1) {
                               document.getElementById('fumaBack').style.backgroundColor = 'red';
                               document.getElementById("tituloFumaca").style.color = 'white';
@@ -437,9 +448,9 @@
                       ref_node_sensor.orderByKey().limitToLast(1).on('value', func_att_data);
                   }
 
-                  function exportFirebase(num) {
+                  function exportFirebase(num) { // Função para exportar um arquivo xlsm
 
-                    var data = new Date();
+                    var data = new Date(); // Obter a data para colocar no documento
                     document.getElementById("sttsTabela").innerHTML = "Wait a moment";
                     console.log("Fazendo Requisições...");
 
@@ -467,12 +478,13 @@
                                 ws_data.push(quebraDelinha);
                                 ws_data.push(cabecalho[0]);
                                 
-                                var ref_data = firebase.database().ref('Curupira/Nodes/' + keys.key + '/fwi');
-                                ref_data.orderByKey().limitToLast(num).on('value', function (data) { //Requisita os 'num' ultimos sensoriamentos de um nó
-                                    var count = 0;
+                                var ref_data = firebase.database().ref('Curupira/Nodes/' + keys.key + '/fwi'); // Para o relatório assim como os gráficos usamos apenas do fwi
+                                ref_data.orderByKey().limitToLast(num).on('value', function (data) { // Requisita os 'num' ultimos sensoriamentos de um nó do path selecionado
+                                    var count = num-1;
                                     data.forEach(function (dado) {
                                         var senso = [];
-                                        senso.push(count++);
+                                        // vetor com todas as informações daquele momento
+                                        senso.push(count--);
                                         senso.push(dado.val().dia);
                                         senso.push(dado.val().mes);
                                         senso.push(dado.val().hora);
@@ -488,24 +500,27 @@
                                         senso.push(dado.val().vel_do_vento);
                                         senso.push(dado.val().vento);
                                         info.push(senso);
+                                        // push de todas as informações em um unico vetor de dados do sensor
                                         ws_data.push(senso);
                                     });                      
                                 });
 
-                                info.reverse();
+                                info.reverse(); // alterando a ordem de exibição para os mais recentes ficarem embaixo
 
+                                // adicionando titulos
                                 wb.SheetNames.push(tituloData[0][0]);
+                                // criando um objeto da biblioteca com as informações do nó
                                 var ws = XLSX.utils.aoa_to_sheet(ws_data);
                                 wb.Sheets[tituloData[0][0]] = ws;
                                 
                                 console.log("Terminou a tabela de 1 nó");
-                                ws_data = [[]];
+                                ws_data = [[]]; // limpando o vetor de informações
                             }); 
                         });
                         document.getElementById("sttsTabela").innerHTML = "Ready, starting download";
 
                         console.log("Exportando xlsx");
-                        XLSX.writeFile(wb, 'Curupira_Report.xlsx');
+                        XLSX.writeFile(wb, 'Curupira_Report.xlsx'); // download do arquivo de fato
                         
                         console.log("Terminaram as tabelas. Salvando");
                     });          
@@ -830,7 +845,8 @@
                     <div class="numbers">
                       <p class="card-category">Report</p>  
                     </div>
-                    <div class="row" style="padding-right: 15px; padding-left: 15px; text-align: center;">                                 
+                    <div class="row" style="padding-right: 15px; padding-left: 15px; text-align: center;">        
+                        <!-- Assim como em todos a seguir, é enviado um numero fixo de requisicoes para a funcao baseada nas 12 leituras -->
                         <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12)" style="margin: 2px 2px; " >Day</button>
                         <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12*7)" style="margin: 2px 2px; " >Week</button>
                         <button type = "submit" class = "btn btn-primary col"  onclick = "exportFirebase(12*30)" style="margin: 2px 2px; " >Month</button>
@@ -870,6 +886,7 @@
               </div>
               <div class="card-footer ">
                 <div class="row" style="padding: 0px 15px">
+                  <!-- Aqui é usado o mesmo esquema das requisições fixas de acordo com o periodo, mas é feito o update separadamente de cada grafico -->
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12,'fwi')">Day</button> 
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12*7,'fwi')">Week</button> 
                   <button class="btn btn-outline-primary col" style="margin: 2px 2px;" onclick="chartUpdateSize(graf_fwi, 12*30,'fwi')">Month</button> 
